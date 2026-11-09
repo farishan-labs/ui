@@ -1,0 +1,65 @@
+{
+  "name": "@farishan-labs/ui",
+  "version": "0.1.0",
+  "description": "Headless UI primitives + W3C DTCG tokens for Faris Han Labs (web components, a11y-first).",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/farishan-labs/ui.git"
+  },
+  "files": [
+    "dist",
+    "PHILOSOPHY.md",
+    "README.md",
+    "LICENSE"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./tokens.css": "./dist/tokens.css",
+    "./tokens": {
+      "types": "./dist/tokens.d.ts",
+      "import": "./dist/tokens.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "bun run typecheck && bun build src/index.ts --outdir dist --target browser && bun run build:tokens",
+    "build:tokens": "bun run scripts/gen-tokens.ts",
+    "dev": "bun run build:tokens && bun serve.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test",
+    "test:coverage": "bun test --coverage",
+    "lint": "oxlint .",
+    "fmt": "oxfmt .",
+    "fmt:check": "oxfmt --check .",
+    "check": "bun run lint && bun run fmt:check && bun run typecheck",
+    "gen:tokens": "bun run scripts/gen-tokens.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.4",
+    "happy-dom": "^21.0.4",
+    "oxfmt": "^0.77.0",
+    "oxlint": "^1.92.0",
+    "typescript": "^5.6.0"
+  },
+  "peerDependencies": {
+    "lucide": ">=0.400.0"
+  },
+  "peerDependenciesMeta": {
+    "lucide": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "bun": ">=1.0.0"
+  }
+}
