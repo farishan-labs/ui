@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@farishan-labs/ui demo</title>
+    <link rel="stylesheet" href="/dist/tokens.css" />
+    <style>
+      body {
+        font-family: var(--ui-font-family-sans, system-ui);
+        background: var(--ui-color-bg-default, #fff);
+        color: var(--ui-color-fg-default, #09090b);
+        padding: var(--ui-space-6, 1.5rem);
+        display: grid;
+        gap: var(--ui-space-4, 1rem);
+        max-width: 48rem;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>@farishan-labs/ui</h1>
+    <ui-button variant="primary" label="Primary"></ui-button>
+    <ui-button variant="secondary" label="Secondary"></ui-button>
+    <ui-button variant="danger" label="Danger" disabled></ui-button>
+
+    <ui-card>
+      <span slot="header">Card title</span>
+      <p>Card body content with tokens.</p>
+      <span slot="footer">Footer</span>
+    </ui-card>
+
+    <ui-field label="Email" hint="We never share" placeholder="you@example.com"></ui-field>
+    <ui-field label="Password" type="password" error="Too short"></ui-field>
+
+    <ui-empty-state
+      title="No items"
+      description="Create your first item to get started."
+    ></ui-empty-state>
+    <ui-loading-state label="Loading data…"></ui-loading-state>
+
+    <ui-dialog label="Confirm" id="dlg">
+      <p>Are you sure?</p>
+    </ui-dialog>
+    <ui-button label="Open dialog" id="openDlg"></ui-button>
+
+    <ui-toast message="Saved successfully" variant="success" open></ui-toast>
+
+    <ui-command-palette id="cp" open placeholder="Search…"></ui-command-palette>
+
+    <script type="module" src="/dist/index.js"></script>
+    <script type="module">
+      document.getElementById("openDlg").addEventListener("click", () => {
+        document.getElementById("dlg").setAttribute("open", "");
+      });
+    </script>
+  </body>
+</html>

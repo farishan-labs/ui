@@ -34,7 +34,7 @@
   "scripts": {
     "build": "bun run typecheck && bun build src/index.ts --outdir dist --target browser && bun run build:tokens",
     "build:tokens": "bun run scripts/gen-tokens.ts",
-    "dev": "bun run build:tokens && bun serve.ts",
+    "dev": "bun run build && bun serve.ts",
     "typecheck": "tsc --noEmit",
     "test": "bun test",
     "test:coverage": "bun test --coverage",
