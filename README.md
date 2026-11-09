@@ -12,18 +12,20 @@ v0.1 in progress. See `PHILOSOPHY.md` for the durable principles and
 
 ```bash
 bun add @farishan-labs/ui
+# tokens are provided by @farishan-labs/design-tokens (pulled in as a dependency)
 ```
 
 Or drop in the generated CSS:
 
 ```html
-<link rel="stylesheet" href="node_modules/@farishan-labs/ui/dist/tokens.css" />
+<link rel="stylesheet" href="node_modules/@farishan-labs/design-tokens/src/tokens/tokens.css" />
 ```
 
 ## Usage
 
 ```ts
 import "@farishan-labs/ui"; // registers custom elements
+import { tokens } from "@farishan-labs/ui"; // re-exported from design-tokens
 ```
 
 ```html

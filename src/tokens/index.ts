@@ -1,1 +1,1 @@
-export { tokens, cssVar, type Tokens } from "./tokens";
+export { tokens, cssVar, type Tokens } from "@farishan-labs/design-tokens";

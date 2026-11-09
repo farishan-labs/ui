@@ -4,6 +4,9 @@
   "workspaces": {
     "": {
       "name": "@farishan-labs/ui",
+      "dependencies": {
+        "@farishan-labs/design-tokens": "file:../design-tokens",
+      },
       "devDependencies": {
         "@types/bun": "^1.4.4",
         "happy-dom": "^21.0.4",
@@ -20,6 +23,8 @@
     },
   },
   "packages": {
+    "@farishan-labs/design-tokens": ["@farishan-labs/design-tokens@file:../design-tokens", { "devDependencies": { "@types/bun": "^1.4.4", "oxfmt": "^0.77.0", "oxlint": "^1.92.0", "typescript": "^5.6.0" } }],
+
     "@oxfmt/binding-android-arm-eabi": ["@oxfmt/binding-android-arm-eabi@0.77.0", "", { "os": "android", "cpu": "arm" }, "sha512-zmPiuOvkuu0csMx4U3gdMunIFWNcWulzikFMdAPBzLazVAA3LhdHzv9yzgUgAckv/zje5vz4XJcseNQKdSsWMw=="],
 
     "@oxfmt/binding-android-arm64": ["@oxfmt/binding-android-arm64@0.77.0", "", { "os": "android", "cpu": "arm64" }, "sha512-shXOIK9sj3bvt4H6K47qFWNKaYBwEhzj97iUwoLGyyRDrXt1OdAAuCiupCinG1i7ETL81knjEKeB+JmhOOfPew=="],
