@@ -1,7 +1,7 @@
 # @farishan-labs/ui
 
 Headless UI primitives + W3C DTCG tokens for Faris Han Labs. Web components
-(first), a11y-first, framework-agnostic core. Apache-2.0.
+(first), a11y-first, framework-agnostic core. GPL-3.0.
 
 ![preview](demo/preview.png)
 
