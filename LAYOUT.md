@@ -1,6 +1,6 @@
 # Layout rules — `@farishan-labs/ui`
 
-Conventions for page/app-shell layout. These are *policies*, not token
+Conventions for page/app-shell layout. These are _policies_, not token
 values; values come from `@farishan-labs/design-tokens` (P4). Amend here
 freely (no research gate required); promote to a principle in
 `farishan-labs/principles` only if it becomes cross-cutting across all lab
@@ -18,7 +18,7 @@ web apps.
 
 - Padding: `space.6` (24px) horizontal minimum.
 - Max-width: `48rem` (768px) centered, or the marketing template's chosen
-  measure. Marketing pages *are* reading surfaces, so a measure applies.
+  measure. Marketing pages _are_ reading surfaces, so a measure applies.
 
 ## Components / content measure
 

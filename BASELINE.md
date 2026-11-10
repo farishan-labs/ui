@@ -1,7 +1,7 @@
 # Global CSS baseline — `@farishan-labs/ui`
 
 Cross-cutting CSS baselines applied to `body`/`:root` (or the app's root
-element) on every Farishan Labs web surface. These are *policies*, not
+element) on every Farishan Labs web surface. These are _policies_, not
 token values (P4); values live in `design-tokens`.
 
 Amend here freely (no research gate). Promote to a principle in

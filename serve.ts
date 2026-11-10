@@ -1,4 +1,4 @@
-import { extname, normalize, resolve, sep } from "node:path";
+import { extname, resolve, sep } from "node:path";
 
 const ROOT = resolve(".");
 const PORT = Number(process.env.PORT ?? 3000);
