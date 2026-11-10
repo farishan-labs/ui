@@ -11,10 +11,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          path: ui
+      - uses: actions/checkout@v4
+        with:
+          repository: farishan-labs/design-tokens
+          path: design-tokens
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
       - run: bun install --frozen-lockfile
-      - run: bun run gen:tokens
+        working-directory: ui
       - run: bun run check
+        working-directory: ui
       - run: bun test --coverage
+        working-directory: ui
