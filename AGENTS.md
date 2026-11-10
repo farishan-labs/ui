@@ -18,6 +18,11 @@ Dev tooling is standalone `oxlint` (lint) and `oxfmt` (format).
 
 ## Notes
 
+- Layout conventions: see `LAYOUT.md` (app shells = 24px padding via
+  `space.6`, no max-width for non-marketing web apps; max-width only on
+  marketing pages).
+- Global CSS baseline: see `BASELINE.md` (always apply antialiased font
+  smoothing on `body`, plus box-sizing/focus-visible/reduced-motion).
 - Runtime stays dependency-free; `oxlint`/`oxfmt`/`happy-dom` are devDependencies only.
 - Coverage thresholds are enforced per file (Bun behavior), 100% lines + functions.
 - Branch/statement coverage is advisory (Bun does not enforce them).

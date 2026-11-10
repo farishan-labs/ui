@@ -23,6 +23,7 @@
       "import": "./dist/index.js"
     },
     "./tokens.css": "./dist/tokens.css",
+    "./baseline.css": "./dist/baseline.css",
     "./tokens": {
       "types": "./dist/tokens.d.ts",
       "import": "./dist/tokens.js"
@@ -33,7 +34,7 @@
   },
   "scripts": {
     "build": "bun run typecheck && bun build src/index.ts --outdir dist --target browser && bun run build:tokens",
-    "build:tokens": "cp node_modules/@farishan-labs/design-tokens/src/tokens/tokens.css dist/tokens.css",
+    "build:tokens": "cp node_modules/@farishan-labs/design-tokens/src/tokens/tokens.css dist/tokens.css && cp src/baseline.css dist/baseline.css",
     "dev": "bun run build && bun serve.ts",
     "typecheck": "tsc --noEmit",
     "test": "bun test",
