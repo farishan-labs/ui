@@ -2,9 +2,11 @@
 // Importing this module registers all custom elements and re-exports primitives.
 
 export { Component } from "./core/component";
-export { Button } from "./components/button";
+export { Alert } from "./components/alert";
 export { Badge } from "./components/badge";
+export { Button } from "./components/button";
 export { Card } from "./components/card";
+export { Spinner } from "./components/spinner";
 export { Field } from "./components/field";
 export { Dialog } from "./components/dialog";
 export { Toast } from "./components/toast";
@@ -15,9 +17,11 @@ export { CommandPalette } from "./components/command-palette";
 export * from "./tokens";
 
 // Side-effect registration happens in each component module on import.
-import "./components/button";
+import "./components/alert";
 import "./components/badge";
+import "./components/button";
 import "./components/card";
+import "./components/spinner";
 import "./components/field";
 import "./components/dialog";
 import "./components/toast";
