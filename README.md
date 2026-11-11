@@ -1,5 +1,8 @@
 # @farishan-labs/ui
 
+![License](https://img.shields.io/github/license/farishan-labs/ui) ![Stars](https://img.shields.io/github/stars/farishan-labs/ui)
+
+
 Headless UI primitives + W3C DTCG tokens for Faris Han Labs. Web components
 (first), a11y-first, framework-agnostic core. GPL-3.0.
 
@@ -46,3 +49,9 @@ bun test
 
 `research/topics/farishan-labs-ui/` (README, findings E0001–E0080, gaps G1–G31,
 needs N1–N11). Research gate satisfied 2026-11-09.
+
+## Installation
+
+```bash
+npm install ui
+```
