@@ -2,6 +2,14 @@
 
 ![License](https://img.shields.io/github/license/farishan-labs/ui) ![Stars](https://img.shields.io/github/stars/farishan-labs/ui)
 
+## Get the toolkit
+
+[![npm](https://img.shields.io/npm/v/@farishan-labs/ui)](https://www.npmjs.com/package/@farishan-labs/ui)
+[![npm downloads](https://img.shields.io/npm/dm/@farishan-labs/ui)](https://www.npmjs.com/package/@farishan-labs/ui)
+[![Gumroad](https://img.shields.io/badge/Gumroad-OpenCode%20Dev%20Toolkit-ff90e8)](https://farishan1.gumroad.com/l/sknrfm)
+
+Part of Faris Han Labs. Buy the OpenCode Dev Toolkit on Gumroad.
+
 
 Headless UI primitives + W3C DTCG tokens for Faris Han Labs. Web components
 (first), a11y-first, framework-agnostic core. GPL-3.0.
