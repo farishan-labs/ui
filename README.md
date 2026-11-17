@@ -63,3 +63,9 @@ needs N1–N11). Research gate satisfied 2026-11-09.
 ```bash
 npm install ui
 ```
+
+---
+
+## Support
+
+If this is useful, a star on GitHub helps. Paid tier (OpenCode Dev Toolkit) on Gumroad: https://farishan1.gumroad.com/l/sknrfm
