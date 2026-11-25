@@ -24,9 +24,14 @@ export class Badge extends Component {
           background: var(--ui-color-bg-muted, #f4f4f5);
           color: var(--ui-color-fg-default, #09090b);
         }
-        .badge[data-variant="success"] { background: var(--ui-color-success-bg, #dcfce7); color: var(--ui-color-success-fg, #166534); }
-        .badge[data-variant="warning"] { background: var(--ui-color-warning-bg, #fef9c3); color: var(--ui-color-warning-fg, #854d0e); }
-        .badge[data-variant="danger"] { background: var(--ui-color-danger-bg, #fee2e2); color: var(--ui-color-danger-fg, #991b1b); }
+        .badge[data-variant="success"] { background: #dcfce7; color: #166534; }
+        .badge[data-variant="danger"] { background: #fee2e2; color: #991b1b; }
+        .badge[data-variant="warning"] { background: #fef9c3; color: #854d0e; }
+        @media (prefers-color-scheme: dark) {
+          .badge[data-variant="success"] { background: #14532d; color: #bbf7d0; }
+          .badge[data-variant="danger"] { background: #7f1d1d; color: #fecaca; }
+          .badge[data-variant="warning"] { background: #713f12; color: #fef08a; }
+        }
       </style>
       <span class="badge" data-variant="${this.variant}"><slot></slot></span>
     `;
