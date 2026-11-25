@@ -56,6 +56,9 @@ export class Button extends Component {
         button:hover:not(:disabled) { filter: brightness(0.95); }
         button:focus-visible { outline: 2px solid var(--ui-color-accent-default, #2563eb); outline-offset: 2px; }
         button:disabled { pointer-events: none; }
+        @media (prefers-reduced-motion: reduce) {
+          button { transition: none; }
+        }
       </style>
       <button type="${this.escapeHtml(type)}" class="${variant}" ${disabled ? "disabled" : ""} aria-disabled="${disabled}">${label !== null ? this.escapeHtml(label) : ""}<slot></slot></button>
     `;
