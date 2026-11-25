@@ -16,8 +16,8 @@ test("tokens expose space.4 as DTCG dimension", () => {
   expect((tokens as any).space["4"].unit).toBe("rem");
 });
 
-test("tokens re-exported from design-tokens", async () => {
+test("tokens live in ui (merged from design-tokens)", async () => {
   const fs = await import("node:fs");
-  const path = "../node_modules/@farishan-labs/design-tokens/src/tokens/tokens.css";
+  const path = "../src/tokens/tokens/tokens.css";
   expect(fs.existsSync(new URL(path, import.meta.url).pathname)).toBe(true);
 });

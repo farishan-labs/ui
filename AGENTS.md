@@ -27,7 +27,8 @@ Dev tooling is standalone `oxlint` (lint) and `oxfmt` (format).
 - Coverage thresholds are enforced per file (Bun behavior), 100% lines + functions.
 - Branch/statement coverage is advisory (Bun does not enforce them).
 - No pre-commit hook; CI (`bun run check` + tests) is the gate.
-- Philosophy: see PHILOSOPHY.md. Research basis: research/topics/farishan-labs-ui/.
+- Philosophy: see PHILOSOPHY.md (P4 tokens as SSOT). Research basis: research/topics/farishan-labs-ui/ (mirrored in docs/research/).
+- Design-tokens merged in (2026-11-25): tokens now live in src/tokens/; @farishan-labs/design-tokens is deprecated. Design-tokens-first: web components, React, and native Ubuntu desktop are implementations consuming these tokens.
 - v0.1 scope: W3C DTCG tokens + accessible web-component primitives
   (button, field, card, dialog, toast, empty/loading, command palette) +
   Lucide peer dep + CI/a11y tests + published package. No React wrappers,

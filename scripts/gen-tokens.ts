@@ -1,0 +1,349 @@
+import { mkdirSync, writeFileSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import {
+  applyInheritance,
+  parseResolver,
+  resolveAliases,
+  resolveResolver,
+  validate,
+  validateResolver,
+} from "@styleframe/dtcg";
+
+const ROOT = resolve(import.meta.dir, "..");
+const SRC_TOKENS = resolve(ROOT, "src/tokens/tokens");
+const DIST = resolve(ROOT, "dist");
+
+type TokenNode = { $value?: unknown; $type?: string; [k: string]: unknown };
+
+function isToken(node: unknown): node is { $value: unknown } {
+  return typeof node === "object" && node !== null && "$value" in (node as object);
+}
+
+type Entry = { path: string[]; type: string; value: unknown };
+
+function walk(node: TokenNode, path: string[], out: Entry[]): void {
+  if (isToken(node)) {
+    out.push({ path, type: String((node as { $type?: string }).$type ?? ""), value: node.$value });
+    return;
+  }
+  if (typeof node === "object" && node !== null) {
+    for (const [k, v] of Object.entries(node)) {
+      if (k.startsWith("$")) continue;
+      walk(v as TokenNode, [...path, k], out);
+    }
+  }
+}
+
+function cssVarName(path: string[]): string {
+  return "--ui-" + path.join("-");
+}
+
+function num(v: unknown): number {
+  return typeof v === "number" ? v : Number(v);
+}
+
+function fontFamilyToCss(v: unknown): string {
+  return Array.isArray(v) ? v.join(", ") : String(v);
+}
+
+function fontWeightToCss(v: unknown): string {
+  return String(v);
+}
+
+function cubicBezierToCss(v: unknown): string {
+  const arr = v as number[];
+  return `cubic-bezier(${arr.join(", ")})`;
+}
+
+function borderToCss(v: unknown): string {
+  const o = v as Record<string, unknown>;
+  const width = dimToCss(o.width);
+  const style = strokeStyleToCss(o.style);
+  const color = colorToCss(o.color);
+  return `${width} ${style} ${color}`.trim();
+}
+
+function strokeStyleToCss(v: unknown): string {
+  if (typeof v === "string") return v;
+  const o = v as Record<string, unknown>;
+  const dashes = Array.isArray(o.dashArray)
+    ? (o.dashArray as unknown[]).map(dimToCss).join(" ")
+    : "";
+  return dashes || "dashed";
+}
+
+function transitionToCss(v: unknown): string {
+  const o = v as Record<string, unknown>;
+  const duration = durationToCss(o.duration);
+  const timing = cubicBezierToCss(o.timingFunction);
+  const delay = o.delay ? durationToCss(o.delay) : "0ms";
+  return `${duration} ${timing} ${delay}`.trim();
+}
+
+function gradientToCss(v: unknown): string {
+  const stops = v as Array<Record<string, unknown>>;
+  const parts = stops.map((s) => {
+    const color = colorToCss(s.color);
+    const pos = typeof s.position === "number" ? ` ${Math.round(s.position * 100)}%` : "";
+    return `${color}${pos}`;
+  });
+  return `linear-gradient(${parts.join(", ")})`;
+}
+
+function typographyToCss(v: unknown): string {
+  const o = v as Record<string, unknown>;
+  const weight = o.fontWeight !== undefined ? fontWeightToCss(o.fontWeight) : "";
+  const size = dimToCss(o.fontSize);
+  const lineHeight =
+    o.lineHeight !== undefined
+      ? typeof o.lineHeight === "number"
+        ? String(o.lineHeight)
+        : dimToCss(o.lineHeight)
+      : "";
+  const family = fontFamilyToCss(o.fontFamily);
+  const lh = lineHeight ? `/${lineHeight}` : "";
+  return `${weight} ${size}${lh} ${family}`.trim();
+}
+
+function shadowToCssSingle(v: unknown): string {
+  const o = v as Record<string, unknown>;
+  const color = colorToCss(o.color);
+  const ox = dimToCss(o.offsetX);
+  const oy = dimToCss(o.offsetY);
+  const blur = dimToCss(o.blur);
+  const spread = dimToCss(o.spread);
+  const inset = o.inset ? "inset " : "";
+  return `${inset}${ox} ${oy} ${blur} ${spread} ${color}`.trim();
+}
+
+function shadowToCss(v: unknown): string {
+  if (typeof v === "string") return v;
+  if (Array.isArray(v)) return v.map(shadowToCssSingle).join(", ");
+  return shadowToCssSingle(v);
+}
+
+function colorToCss(v: unknown): string {
+  if (typeof v === "string") return v;
+  const o = v as Record<string, unknown>;
+  if (o.hex && typeof o.hex === "string") {
+    const alpha = typeof o.alpha === "number" ? o.alpha : 1;
+    if (alpha < 1) {
+      const comps = o.components as number[];
+      const [r, g, b] = comps.map((c) => Math.round(c * 255));
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+    return o.hex as string;
+  }
+  const comps = o.components as number[];
+  if (Array.isArray(comps)) {
+    const [r, g, b] = comps.map((c) => Math.round(c * 255));
+    const alpha = typeof o.alpha === "number" ? o.alpha : 1;
+    return alpha < 1 ? `rgba(${r}, ${g}, ${b}, ${alpha})` : `rgb(${r}, ${g}, ${b})`;
+  }
+  return String(v);
+}
+
+function dimToCss(v: unknown): string {
+  if (typeof v === "string") return v;
+  const o = v as Record<string, unknown>;
+  if (num(o.value) === 0) return "0";
+  return `${o.value}${o.unit}`;
+}
+
+function durationToCss(v: unknown): string {
+  if (typeof v === "string") return v;
+  const o = v as Record<string, unknown>;
+  return `${o.value}${o.unit}`;
+}
+
+function toCss(type: string, value: unknown): string {
+  switch (type) {
+    case "color":
+      return colorToCss(value);
+    case "dimension":
+      return dimToCss(value);
+    case "duration":
+      return durationToCss(value);
+    case "shadow":
+      return shadowToCss(value);
+    case "fontFamily":
+      return fontFamilyToCss(value);
+    case "fontWeight":
+      return fontWeightToCss(value);
+    case "cubicBezier":
+      return cubicBezierToCss(value);
+    case "number":
+      return String(value);
+    case "border":
+      return borderToCss(value);
+    case "strokeStyle":
+      return strokeStyleToCss(value);
+    case "transition":
+      return transitionToCss(value);
+    case "gradient":
+      return gradientToCss(value);
+    case "typography":
+      return typographyToCss(value);
+    default:
+      if (typeof value === "string") return value;
+      if (typeof value === "number" || typeof value === "boolean") return String(value);
+      return JSON.stringify(value);
+  }
+}
+
+function buildNested(entries: Entry[]): unknown {
+  const root: Record<string, unknown> = {};
+  for (const { path, value } of entries) {
+    let cur: Record<string, unknown> = root;
+    for (let i = 0; i < path.length - 1; i++) {
+      const key = path[i]!;
+      if (typeof cur[key] !== "object" || cur[key] === null) cur[key] = {};
+      cur = cur[key] as Record<string, unknown>;
+    }
+    cur[path[path.length - 1]!] = value;
+  }
+  return root;
+}
+
+function entriesFromDoc(doc: unknown): Entry[] {
+  const entries: Entry[] = [];
+  walk(doc as TokenNode, [], entries);
+  // remove $schema if present as token? walk skips $-prefixed keys, so fine
+  return entries;
+}
+
+function buildCss(entries: Entry[]): string {
+  const lines: string[] = [":root {"];
+  for (const { path, type, value } of entries) {
+    lines.push(`  ${cssVarName(path)}: ${toCss(type, value)};`);
+  }
+  lines.push("}");
+  lines.push("");
+  return lines.join("\n");
+}
+
+async function resolveMode(
+  mode: "light" | "dark",
+  resolverFile: string = "tokens.resolver.json",
+): Promise<Entry[]> {
+  const resolverRaw = JSON.parse(readFileSync(resolve(SRC_TOKENS, resolverFile), "utf8"));
+  const resolver = parseResolver(resolverRaw);
+  const rErrors = validateResolver(resolver);
+  if (rErrors.length) {
+    console.error("Resolver validation errors:");
+    for (const e of rErrors) console.error(`  - ${e.path}: ${e.message}`);
+    process.exit(1);
+  }
+  const loader = async (ref: string) => {
+    const p = resolve(SRC_TOKENS, ref);
+    return JSON.parse(readFileSync(p, "utf8"));
+  };
+  const resolved = await resolveResolver(resolver, { theme: mode }, loader);
+  // Apply type/deprecated inheritance and resolve aliases for full DTCG coverage.
+  const inherited = applyInheritance(resolved as any);
+  const aliased = resolveAliases(inherited as any, { strict: false });
+  // validate resolved
+  const vErrors = validate(aliased as any);
+  if (vErrors.length) {
+    console.error(`Resolved (${mode}) validation errors:`);
+    for (const e of vErrors)
+      console.error(`  - ${e.path}: expected ${e.expected}, received ${e.received}`);
+    process.exit(1);
+  }
+  return entriesFromDoc(aliased as any);
+}
+
+const lightEntries = await resolveMode("light");
+const darkEntries = await resolveMode("dark");
+
+// Mono scheme (monochromatic accent) — separate stylesheet + TS.
+const monoLightEntries = await resolveMode("light", "tokens.mono.resolver.json");
+const monoDarkEntries = await resolveMode("dark", "tokens.mono.resolver.json");
+
+const monoLightCss = buildCss(monoLightEntries);
+const monoDarkLines: string[] = [];
+monoDarkLines.push("@media (prefers-color-scheme: dark) {");
+monoDarkLines.push('  :root:not([data-theme="light"]) {');
+for (const { path, type, value } of monoDarkEntries) {
+  monoDarkLines.push(`    ${cssVarName(path)}: ${toCss(type, value)};`);
+}
+monoDarkLines.push("  }");
+monoDarkLines.push("}");
+monoDarkLines.push("");
+monoDarkLines.push(':root[data-theme="dark"] {');
+for (const { path, type, value } of monoDarkEntries) {
+  monoDarkLines.push(`  ${cssVarName(path)}: ${toCss(type, value)};`);
+}
+monoDarkLines.push("}");
+monoDarkLines.push("");
+const monoDarkCss = monoDarkLines.join("\n");
+const monoCss = monoLightCss + "\n" + monoDarkCss;
+
+const monoNested = buildNested(monoLightEntries);
+const monoTs = `// Generated by scripts/gen-tokens.ts — do not edit by hand.\n// Source: src/tokens/tokens.json + tokens.mono.json (mono scheme) + resolver (light mode).\n\nexport const tokens = ${JSON.stringify(monoNested, null, 2)} as const;\n\nexport type Tokens = typeof tokens;\n\nexport const cssVar = (path: string[]): string => "--ui-" + path.join("-");\n`;
+
+// Light CSS
+const lightCss = buildCss(lightEntries);
+
+// Dark CSS: override vars under media query + data-theme
+const darkLines: string[] = [];
+darkLines.push("@media (prefers-color-scheme: dark) {");
+darkLines.push('  :root:not([data-theme="light"]) {');
+for (const { path, type, value } of darkEntries) {
+  darkLines.push(`    ${cssVarName(path)}: ${toCss(type, value)};`);
+}
+darkLines.push("  }");
+darkLines.push("}");
+darkLines.push("");
+darkLines.push(':root[data-theme="dark"] {');
+for (const { path, type, value } of darkEntries) {
+  darkLines.push(`  ${cssVarName(path)}: ${toCss(type, value)};`);
+}
+darkLines.push("}");
+darkLines.push("");
+const darkCss = darkLines.join("\n");
+
+const css = lightCss + "\n" + darkCss;
+
+// TS (light structured values)
+const nested = buildNested(lightEntries);
+const ts = `// Generated by scripts/gen-tokens.ts — do not edit by hand.\n// Source: src/tokens/tokens.json (W3C DTCG) + resolver (light mode).\n\nexport const tokens = ${JSON.stringify(nested, null, 2)} as const;\n\nexport type Tokens = typeof tokens;\n\nexport const cssVar = (path: string[]): string => "--ui-" + path.join("-");\n`;
+
+mkdirSync(SRC_TOKENS, { recursive: true });
+writeFileSync(resolve(SRC_TOKENS, "tokens.css"), css);
+writeFileSync(resolve(SRC_TOKENS, "tokens.ts"), ts);
+
+// Keep generated TS formatted (oxfmt) so CI's fmt:check passes.
+const oxfmtBin = resolve(ROOT, "node_modules", ".bin", "oxfmt");
+const fmtResult = Bun.spawnSync([oxfmtBin, resolve(SRC_TOKENS, "tokens.ts")], {
+  stdout: "inherit",
+  stderr: "inherit",
+});
+if (fmtResult.exitCode !== 0) {
+  console.error("oxfmt failed on generated tokens.ts");
+  process.exit(fmtResult.exitCode ?? 1);
+}
+
+mkdirSync(DIST, { recursive: true });
+writeFileSync(resolve(DIST, "tokens.css"), css);
+
+mkdirSync(SRC_TOKENS, { recursive: true });
+writeFileSync(resolve(SRC_TOKENS, "tokens.mono.css"), monoCss);
+writeFileSync(resolve(SRC_TOKENS, "tokens.mono.ts"), monoTs);
+
+mkdirSync(DIST, { recursive: true });
+writeFileSync(resolve(DIST, "tokens.mono.css"), monoCss);
+
+// Format generated mono TS.
+const fmtMono = Bun.spawnSync([oxfmtBin, resolve(SRC_TOKENS, "tokens.mono.ts")], {
+  stdout: "inherit",
+  stderr: "inherit",
+});
+if (fmtMono.exitCode !== 0) {
+  console.error("oxfmt failed on generated tokens.mono.ts");
+  process.exit(fmtMono.exitCode ?? 1);
+}
+
+console.log(
+  `Generated ${lightEntries.length} tokens (light) + ${darkEntries.length} (dark); mono scheme -> src/tokens/tokens.mono.css, src/tokens/tokens.mono.ts, dist/tokens.mono.css`,
+);

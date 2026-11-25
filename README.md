@@ -10,7 +10,6 @@
 
 Part of Faris Han Labs. Buy the OpenCode Dev Toolkit on Gumroad.
 
-
 Headless UI primitives + W3C DTCG tokens for Faris Han Labs. Web components
 (first), a11y-first, framework-agnostic core. GPL-3.0.
 
