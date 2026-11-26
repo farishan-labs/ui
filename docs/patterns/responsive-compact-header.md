@@ -162,6 +162,21 @@ When choosing a breakpoint for "stacked on small, side-by-side if room":
    text touches the edge. Also check `leftOfContent === 0` / content filling
    the whole element.
 
+## Spacing utilities and hidden siblings
+
+`space-y-*` / `space-x-*` apply margin to **every** child except the first,
+including `aria-hidden` inputs that form primitives (Select, Combobox, etc.)
+render for value submission. Those take no visual space but still receive
+margin, producing phantom gaps below the visible element.
+
+- ✅ Inspect the rendered DOM, not just the JSX — hidden siblings are injected
+  by the primitive and won't appear in your component code.
+- ✅ Measure `containerBottom - elementBottom`; a value > 0 means dangling
+  margin.
+- ✅ Prefer targeted margins (`mb-1.5` on the label) over blanket `space-y-*`
+  when the wrapper may contain non-visual children.
+- ❌ Assume `space-y-*` only affects visible elements.
+
 ## Shared-component edits (anti-regression)
 
 When a visual change is requested for **one** consumer of a shared layout
