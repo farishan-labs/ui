@@ -143,6 +143,25 @@ rows with `space-between` where children sum to more than the content box.
 - [ ] Tap targets ≥ 44×44px
 - [ ] Verified with headed automation + screenshot
 
+## Breakpoint validation (anti-overflow)
+
+When choosing a breakpoint for "stacked on small, side-by-side if room":
+
+1. **Measure the available width** at the candidate breakpoint (the parent
+   container, not the viewport). E.g. a `lg:col-span-5` card at 1024px is
+   ~395px wide, not 1024px.
+2. **Compute the required width**: `2 × (contentWidth + padding) + gap`.
+   If the container is narrower than this, side-by-side will overflow.
+3. **Don't trust Tailwind defaults.** `sm:` (640px) is often far too early.
+   Pick the breakpoint where the container actually exceeds the required width
+   (here, `xl:` = 1280px).
+4. **Test the in-between widths** (1024px, 1280px), not just mobile (390px)
+   and desktop (1440px). Tablet/medium is where layouts silently break.
+5. **Watch for `min-w-0` masking overflow.** It lets flex items shrink below
+   their content size, so `scrollWidth ≈ clientWidth` can look "fine" while
+   text touches the edge. Also check `leftOfContent === 0` / content filling
+   the whole element.
+
 ## Shared-component edits (anti-regression)
 
 When a visual change is requested for **one** consumer of a shared layout
