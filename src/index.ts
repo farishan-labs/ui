@@ -13,6 +13,7 @@ export { Toast } from "./components/toast";
 export { EmptyState } from "./components/empty-state";
 export { LoadingState } from "./components/loading-state";
 export { CommandPalette } from "./components/command-palette";
+export { JsonViewer } from "./components/json-viewer";
 
 export * from "./tokens";
 
@@ -28,3 +29,4 @@ import "./components/toast";
 import "./components/empty-state";
 import "./components/loading-state";
 import "./components/command-palette";
+import "./components/json-viewer";
