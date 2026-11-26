@@ -97,15 +97,15 @@ rows with `space-between` where children sum to more than the content box.
 
 ## Do / Don't
 
-| Do | Don't |
-|---|---|
-| Match mobile subtitle to desktop subtitle | Let renames rewrite taglines |
-| Let sentences wrap as sentences (block/inline flow) | `nowrap` flex rows for sentences in tight space |
-| Shorten on mobile, full on `sm+` via visibility toggles | Ship full verbose copy on 360px |
-| Keep the switch link (shortened if needed) | Remove the only nav affordance to save space |
-| Budget ~32–40px header height | Let the header grow to 70px+ |
-| Assert `scrollWidth === clientWidth` | Ship without checking overflow |
-| Measure at 360/375/390/412px with headed automation | Trust desktop preview only |
+| Do                                                      | Don't                                           |
+| ------------------------------------------------------- | ----------------------------------------------- |
+| Match mobile subtitle to desktop subtitle               | Let renames rewrite taglines                    |
+| Let sentences wrap as sentences (block/inline flow)     | `nowrap` flex rows for sentences in tight space |
+| Shorten on mobile, full on `sm+` via visibility toggles | Ship full verbose copy on 360px                 |
+| Keep the switch link (shortened if needed)              | Remove the only nav affordance to save space    |
+| Budget ~32–40px header height                           | Let the header grow to 70px+                    |
+| Assert `scrollWidth === clientWidth`                    | Ship without checking overflow                  |
+| Measure at 360/375/390/412px with headed automation     | Trust desktop preview only                      |
 
 ## Minimal example (framework-agnostic)
 
