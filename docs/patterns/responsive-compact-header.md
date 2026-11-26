@@ -143,6 +143,21 @@ rows with `space-between` where children sum to more than the content box.
 - [ ] Tap targets ≥ 44×44px
 - [ ] Verified with headed automation + screenshot
 
+## Shared-component edits (anti-regression)
+
+When a visual change is requested for **one** consumer of a shared layout
+component:
+
+1. **Enumerate consumers first.** Grep for the component name; list every call
+   site and its expected behavior. (e.g. `AuthSplitLayout` is used by login,
+   register, forgot-password, reset-password, complete-profile.)
+2. **Don't mutate the shared default.** A global edit to satisfy one consumer
+   silently flips the others — same class of bug as an over-broad rename commit.
+3. **Add a prop with a sensible default.** Keep the majority behavior as the
+   default; let the minority opt in (e.g. `topUtilityAlign` defaults to
+   `'end'`, forgot/reset pass `'start'`).
+4. **Verify every consumer** after the change, not just the one being fixed.
+
 ## Origin
 
 Distilled from a mobile-responsiveness pass on an auth split-screen layout:
