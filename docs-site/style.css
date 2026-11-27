@@ -1,11 +1,52 @@
-:root { font-family: var(--ui-font-family-sans, system-ui); }
-body { margin: 0; display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; background: var(--ui-color-bg-default, #fff); color: var(--ui-color-fg-default, #09090b); }
-#sidebar { padding: var(--ui-space-4, 1rem); border-right: 1px solid var(--ui-color-border-default, #e4e4e7); }
-#sidebar h1 { font-size: var(--ui-font-size-lg, 1.125rem); margin: 0 0 1rem; }
-#sidebar nav { display: flex; flex-direction: column; gap: var(--ui-space-2, 0.5rem); }
-#sidebar a { color: var(--ui-color-fg-default, #09090b); text-decoration: none; }
-#sidebar a:hover { color: var(--ui-color-accent-default, #2563eb); }
-#content { padding: var(--ui-space-6, 1.5rem); max-width: 48rem; }
-#content h1, #content h2, #content h3 { margin-top: 1.5rem; }
-#content code { font-family: var(--ui-font-family-mono, monospace); background: var(--ui-color-bg-muted, #f4f4f5); padding: 0.1rem 0.3rem; border-radius: 0.25rem; }
-#content pre { background: var(--ui-color-bg-muted, #f4f4f5); padding: 1rem; border-radius: 0.5rem; overflow: auto; }
+:root {
+  font-family: var(--ui-font-family-sans, system-ui);
+}
+body {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+  background: var(--ui-color-bg-default, #fff);
+  color: var(--ui-color-fg-default, #09090b);
+}
+#sidebar {
+  padding: var(--ui-space-4, 1rem);
+  border-right: 1px solid var(--ui-color-border-default, #e4e4e7);
+}
+#sidebar h1 {
+  font-size: var(--ui-font-size-lg, 1.125rem);
+  margin: 0 0 1rem;
+}
+#sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-2, 0.5rem);
+}
+#sidebar a {
+  color: var(--ui-color-fg-default, #09090b);
+  text-decoration: none;
+}
+#sidebar a:hover {
+  color: var(--ui-color-accent-default, #2563eb);
+}
+#content {
+  padding: var(--ui-space-6, 1.5rem);
+  max-width: 48rem;
+}
+#content h1,
+#content h2,
+#content h3 {
+  margin-top: 1.5rem;
+}
+#content code {
+  font-family: var(--ui-font-family-mono, monospace);
+  background: var(--ui-color-bg-muted, #f4f4f5);
+  padding: 0.1rem 0.3rem;
+  border-radius: 0.25rem;
+}
+#content pre {
+  background: var(--ui-color-bg-muted, #f4f4f5);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow: auto;
+}
