@@ -57,6 +57,7 @@ async function render() {
   }
   if (key === "/components") {
     content.innerHTML = componentShowcase;
+    if (window.Prism) window.Prism.highlightAllUnder(content);
     const btn = content.querySelector("#openDlg");
     btn?.addEventListener("click", () => content.querySelector("#dlg")?.setAttribute("open", ""));
     return;
@@ -66,6 +67,7 @@ async function render() {
     const res = await fetch(path);
     const md = await res.text();
     content.innerHTML = marked.parse(md);
+    if (window.Prism) window.Prism.highlightAllUnder(content);
   } catch (e) {
     content.textContent = "Failed to load " + path;
   }
