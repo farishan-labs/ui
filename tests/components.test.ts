@@ -8,6 +8,7 @@ import "../src/components/toast";
 import "../src/components/empty-state";
 import "../src/components/loading-state";
 import "../src/components/command-palette";
+import "../src/components/accordion";
 
 test("ui-button renders with variant class", () => {
   const el = document.createElement("ui-button") as any;
@@ -184,4 +185,21 @@ test("ui-button escapes html in label", () => {
   el.setAttribute("label", "<script>");
   document.body.appendChild(el);
   expect(el.shadowRoot.innerHTML).not.toContain("<script>");
+});
+
+
+test("ui-accordion toggles panels via behavior", () => {
+  const el = document.createElement("ui-accordion") as any;
+  el.setAttribute("items", JSON.stringify([
+    { value: "a", title: "A", content: "content a" },
+    { value: "b", title: "B", content: "content b" },
+  ]));
+  document.body.appendChild(el);
+  const btns = el.shadowRoot.querySelectorAll(".trigger");
+  const panels = el.shadowRoot.querySelectorAll(".panel");
+  expect(btns.length).toBe(2);
+  btns[0].click();
+  // re-rendered; check aria-expanded
+  const btn0 = el.shadowRoot.querySelector('[data-value="a"]');
+  expect(btn0.getAttribute("aria-expanded")).toBe("true");
 });
