@@ -61,6 +61,19 @@ FHL UI is organized into four layers (see `PHILOSOPHY.md` §1, §3):
 Accessibility (P2), agent-readable semantics (P3), and token-driven visuals (P4)
 are non-negotiable across all layers. See `PHILOSOPHY.md` for the full rationale.
 
+## Headless by default
+
+Components ship behavior, accessibility, and state only. They use `var(--ui-*)`
+**without fallbacks**, so without a token skin they render unstyled (headless).
+Import the default skin for the minimally beautiful baseline:
+
+```ts
+import "@farishan-labs/ui"; // registers custom elements (headless)
+import "@farishan-labs/ui/tokens.css"; // optional default skin
+```
+
+Omit `tokens.css` to style primitives entirely with your own engine.
+
 ## Adapters (opt-in)
 
 FHL UI's core stays self-contained and offline-capable. Remote/external UI SDKs
