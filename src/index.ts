@@ -14,6 +14,7 @@ export { EmptyState } from "./components/empty-state";
 export { LoadingState } from "./components/loading-state";
 export { CommandPalette } from "./components/command-palette";
 export { AccordionComponent as Accordion } from "./components/accordion";
+export { TabsComponent as Tabs } from "./components/tabs";
 export { JsonViewer } from "./components/json-viewer";
 
 export * from "./tokens";
@@ -31,4 +32,5 @@ import "./components/empty-state";
 import "./components/loading-state";
 import "./components/command-palette";
 import "./components/accordion";
+import "./components/tabs";
 import "./components/json-viewer";

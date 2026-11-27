@@ -9,6 +9,7 @@ import "../src/components/empty-state";
 import "../src/components/loading-state";
 import "../src/components/command-palette";
 import "../src/components/accordion";
+import "../src/components/tabs";
 
 test("ui-button renders with variant class", () => {
   const el = document.createElement("ui-button") as any;
@@ -211,4 +212,22 @@ test("ui-accordion handles invalid items JSON", () => {
   el.setAttribute("items", "{bad json");
   document.body.appendChild(el);
   expect(el.shadowRoot.querySelectorAll(".trigger").length).toBe(0);
+});
+
+test("ui-tabs switches active panel", () => {
+  const el = document.createElement("ui-tabs") as any;
+  el.setAttribute(
+    "items",
+    JSON.stringify([
+      { value: "a", title: "A", content: "content a" },
+      { value: "b", title: "B", content: "content b" },
+    ]),
+  );
+  document.body.appendChild(el);
+  const btns = el.shadowRoot.querySelectorAll(".tab");
+  expect(btns.length).toBe(2);
+  const second = el.shadowRoot.querySelector('[data-value="b"]') as HTMLElement;
+  second.click();
+  const selected = el.shadowRoot.querySelector('[aria-selected="true"]') as HTMLElement;
+  expect(selected.getAttribute("data-value")).toBe("b");
 });
