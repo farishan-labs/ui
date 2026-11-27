@@ -151,9 +151,3 @@ Internal:
 - `PHILOSOPHY.md` (P1-P10)
 - `src/behaviors/` (atomic behaviors — to be scaffolded)
 - `src/adapters/ui-sdk.ts` (adapter pattern reference)
-
-```
-
-I'll write this file.<|end|><|start|>startup to=write<|channel|>analysis <|constrain|>xml<|message|><rfl:parameter name="path">
-/home/faris/dev/labs/ui/docs/research/behavior-dsl/README.md
-```
