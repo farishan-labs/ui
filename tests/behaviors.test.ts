@@ -3,6 +3,7 @@ import { Disclosure, reduceDisclosure, initialDisclosure } from "../src/behavior
 import { RovingTabindex, rovingIndex } from "../src/behaviors/atoms/roving-tabindex";
 import { Accordion, createAccordion } from "../src/behaviors/generated/accordion";
 import { Tabs, createTabs } from "../src/behaviors/tabs";
+import { Tabs as GeneratedTabs } from "../src/behaviors/generated/tabs";
 import { compileBml } from "../packages/bml/compile-bml";
 import { readFileSync } from "node:fs";
 
@@ -103,4 +104,23 @@ test("tabs focus movement", () => {
   expect(t.moveFocus("ArrowDown")).toBe(1);
   expect(t.focusIndex).toBe(1);
   expect(t.moveFocus("End")).toBe(3);
+});
+
+test("compiler output equality (tabs)", () => {
+  const generatedPath = "src/behaviors/generated/tabs.ts";
+  const before = readFileSync(generatedPath, "utf8");
+  const code = compileBml("packages/bml/examples/tabs.bml.json", generatedPath);
+  const after = readFileSync(generatedPath, "utf8");
+  expect(code).toBe(before);
+  expect(after).toBe(before);
+});
+
+test("generated tabs matches hand-written behavior", () => {
+  const h = new Tabs({ initialActive: "a" }, 3);
+  const g = new GeneratedTabs({ initialActive: "a" }, 3);
+  expect(g.active).toEqual(h.active);
+  h.select("b");
+  g.select("b");
+  expect(g.active).toEqual(h.active);
+  expect(g.isActive("b")).toBe(h.isActive("b"));
 });

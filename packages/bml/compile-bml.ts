@@ -42,7 +42,7 @@ function relativeImport(fromDir: string, toDir: string): string {
   return rel;
 }
 
-function compile(ir: BmlIr): string {
+function compileAccordion(ir: BmlIr): string {
   const className = toPascalCase(ir.name);
   const optionsName = `${className}Options`;
   const factoryName = `create${className}`;
@@ -119,16 +119,77 @@ function compile(ir: BmlIr): string {
   return lines.join("\n") + "\n";
 }
 
+function compileTabs(ir: BmlIr): string {
+  const className = toPascalCase(ir.name);
+  const optionsName = `${className}Options`;
+  const factoryName = `create${className}`;
+
+  const lines: string[] = [];
+  lines.push("__IMPORTS__");
+  lines.push("");
+  lines.push(`export interface ${optionsName} {`);
+  lines.push("  initialActive?: string;");
+  lines.push("}");
+  lines.push("");
+  lines.push(`export class ${className} {`);
+  lines.push("  active: string;");
+  lines.push("  private roving: RovingTabindex;");
+  lines.push("");
+  lines.push(`  constructor(options: ${optionsName} = {}, count = 0) {`);
+  lines.push('    this.active = options.initialActive ?? "";');
+  lines.push("    this.roving = new RovingTabindex(count);");
+  lines.push("  }");
+  lines.push("");
+  lines.push("  isActive(value: string): boolean {");
+  lines.push("    return this.active === value;");
+  lines.push("  }");
+  lines.push("");
+  lines.push("  select(value: string): void {");
+  lines.push("    this.active = value;");
+  lines.push("  }");
+  lines.push("");
+  lines.push("  get focusIndex(): number {");
+  lines.push("    return this.roving.index;");
+  lines.push("  }");
+  lines.push("");
+  lines.push("  setItemCount(count: number): void {");
+  lines.push("    this.roving.setCount(count);");
+  lines.push("  }");
+  lines.push("");
+  lines.push("  moveFocus(key: string): number {");
+  lines.push("    return this.roving.handleKey(key);");
+  lines.push("  }");
+  lines.push("}");
+  lines.push("");
+  lines.push(
+    `export function ${factoryName}(options?: ${optionsName}, count?: number): ${className} {`,
+  );
+  lines.push(`  return new ${className}(options, count);`);
+  lines.push("}");
+
+  return lines.join("\n") + "\n";
+}
+
 function generate(ir: BmlIr, outputPath: string): string {
   const outputDir = dirname(resolve(outputPath));
   const atomsImportDir = relativeImport(outputDir, ATOMS_DIR);
-  const atomNames = ir.atoms.map((a) => ATOM_IMPORTS[a]).filter(Boolean);
+
+  const neededAtoms = ir.name === "tabs" ? ["roving"] : ir.atoms;
+  const atomNames = neededAtoms.map((a) => ATOM_IMPORTS[a]).filter(Boolean);
 
   const importLines = atomNames
     .map((info) => `import { ${info.exportName} } from "${atomsImportDir}/${info.module}";`)
     .join("\n");
 
-  const body = compile(ir);
+  let body: string;
+  if (ir.name === "tabs") {
+    body = compileTabs(ir);
+  } else if (ir.name === "accordion") {
+    body = compileAccordion(ir);
+  } else {
+    throw new Error(`Unsupported BML behavior: ${ir.name}`);
+  }
+
   return body.replace("__IMPORTS__", importLines);
 }
 
@@ -137,14 +198,8 @@ export function compileBml(inputPath: string, outputPath: string): string {
   if (!ir.name || !ir.atoms || !ir.state) {
     throw new Error("Invalid BML IR: missing name/atoms/state");
   }
-  // This prototype compiler only supports the accordion behavior.
-  if (ir.name !== "accordion") {
-    throw new Error(
-      `Unsupported BML behavior: ${ir.name} (only "accordion" is supported by this prototype compiler)`,
-    );
-  }
-  if (!ir.atoms.includes("disclosure") || !ir.atoms.includes("roving")) {
-    throw new Error("Unsupported BML atoms: this prototype compiler requires disclosure + roving");
+  if (ir.name !== "accordion" && ir.name !== "tabs") {
+    throw new Error(`Unsupported BML behavior: ${ir.name} (supported: accordion, tabs)`);
   }
   const code = generate(ir, outputPath);
   mkdirSync(dirname(resolve(outputPath)), { recursive: true });
