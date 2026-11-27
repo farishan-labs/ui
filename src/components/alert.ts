@@ -14,15 +14,15 @@ export class Alert extends Component {
       <style>
         :host { display: block; }
         .alert {
-          padding: var(--ui-space-3, 0.75rem) var(--ui-space-4, 1rem);
-          border-radius: var(--ui-radius-md, 0.375rem);
-          border: 1px solid var(--ui-color-border-default, #e4e4e7);
-          background: var(--ui-color-bg-muted, #f4f4f5);
-          color: var(--ui-color-fg-default, #09090b);
+          padding: var(--ui-space-3) var(--ui-space-4);
+          border-radius: var(--ui-radius-md);
+          border: 1px solid var(--ui-color-border-default);
+          background: var(--ui-color-bg-muted);
+          color: var(--ui-color-fg-default);
         }
-        .alert[data-variant="success"] { background: var(--ui-color-success-bg, #dcfce7); color: var(--ui-color-success-fg, #166534); border-color: var(--ui-color-success-border, #86efac); }
-        .alert[data-variant="warning"] { background: var(--ui-color-warning-bg, #fef9c3); color: var(--ui-color-warning-fg, #854d0e); border-color: var(--ui-color-warning-border, #fde047); }
-        .alert[data-variant="danger"] { background: var(--ui-color-danger-bg, #fee2e2); color: var(--ui-color-danger-fg, #991b1b); border-color: var(--ui-color-danger-border, #fca5a5); }
+        .alert[data-variant="success"] { background: var(--ui-color-success-bg); color: var(--ui-color-success-fg); border-color: var(--ui-color-success-border); }
+        .alert[data-variant="warning"] { background: var(--ui-color-warning-bg); color: var(--ui-color-warning-fg); border-color: var(--ui-color-warning-border); }
+        .alert[data-variant="danger"] { background: var(--ui-color-danger-bg); color: var(--ui-color-danger-fg); border-color: var(--ui-color-danger-border); }
       </style>
       <div class="alert" data-variant="${this.variant}" role="alert"><slot></slot></div>
     `;

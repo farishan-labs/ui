@@ -52,21 +52,21 @@ export class Field extends Component {
     this.root.innerHTML = this.html`
       <style>
         :host { display: block; }
-        .field { display: flex; flex-direction: column; gap: var(--ui-space-1, 0.25rem); }
-        label { font-size: var(--ui-font-size-sm, 0.875rem); color: var(--ui-color-fg-default, #09090b); }
+        .field { display: flex; flex-direction: column; gap: var(--ui-space-1); }
+        label { font-size: var(--ui-font-size-sm); color: var(--ui-color-fg-default); }
         input {
-          font-family: var(--ui-font-family-sans, inherit);
-          font-size: var(--ui-font-size-md, 1rem);
-          padding: var(--ui-space-2, 0.5rem) var(--ui-space-3, 0.75rem);
-          border: 1px solid var(--ui-color-border-default, #e4e4e7);
-          border-radius: var(--ui-radius-md, 0.375rem);
-          background: var(--ui-color-bg-default, #fff);
-          color: var(--ui-color-fg-default, #09090b);
+          font-family: var(--ui-font-family-sans);
+          font-size: var(--ui-font-size-md);
+          padding: var(--ui-space-2) var(--ui-space-3);
+          border: 1px solid var(--ui-color-border-default);
+          border-radius: var(--ui-radius-md);
+          background: var(--ui-color-bg-default);
+          color: var(--ui-color-fg-default);
         }
-        input:focus-visible { outline: 2px solid var(--ui-color-accent-default, #2563eb); outline-offset: 1px; border-color: var(--ui-color-accent-default, #2563eb); }
-        input[aria-invalid="true"] { border-color: var(--ui-color-danger-default, #dc2626); }
-        .hint { font-size: var(--ui-font-size-xs, 0.75rem); color: var(--ui-color-fg-muted, #71717a); }
-        .error { font-size: var(--ui-font-size-xs, 0.75rem); color: var(--ui-color-danger-default, #dc2626); }
+        input:focus-visible { outline: 2px solid var(--ui-color-accent-default); outline-offset: 1px; border-color: var(--ui-color-accent-default); }
+        input[aria-invalid="true"] { border-color: var(--ui-color-danger-default); }
+        .hint { font-size: var(--ui-font-size-xs); color: var(--ui-color-fg-muted); }
+        .error { font-size: var(--ui-font-size-xs); color: var(--ui-color-danger-default); }
       </style>
       <div class="field">
         ${this.label ? `<label for="${id}">${this.escapeHtml(this.label)}${this.required ? " *" : ""}</label>` : ""}

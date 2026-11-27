@@ -27,16 +27,16 @@ export class Toast extends Component {
       <style>
         :host { display: ${this.open ? "block" : "none"}; }
         .toast {
-          display: inline-flex; align-items: center; gap: var(--ui-space-3, 0.75rem);
-          padding: var(--ui-space-2, 0.5rem) var(--ui-space-4, 1rem);
-          border-radius: var(--ui-radius-md, 0.375rem);
-          background: var(--ui-color-bg-inverse, #09090b);
-          color: var(--ui-color-fg-inverse, #fafafa);
-          box-shadow: var(--ui-shadow-md, 0 4px 6px -1px rgb(0 0 0 / 0.1));
-          font-size: var(--ui-font-size-sm, 0.875rem);
+          display: inline-flex; align-items: center; gap: var(--ui-space-3);
+          padding: var(--ui-space-2) var(--ui-space-4);
+          border-radius: var(--ui-radius-md);
+          background: var(--ui-color-bg-inverse);
+          color: var(--ui-color-fg-inverse);
+          box-shadow: var(--ui-shadow-md);
+          font-size: var(--ui-font-size-sm);
         }
-        .toast.success { background: var(--ui-color-success-default, #16a34a); color: var(--ui-color-success-fg, #fff); }
-        .toast.danger { background: var(--ui-color-danger-default, #dc2626); color: var(--ui-color-danger-fg, #fff); }
+        .toast.success { background: var(--ui-color-success-default); color: var(--ui-color-success-fg); }
+        .toast.danger { background: var(--ui-color-danger-default); color: var(--ui-color-danger-fg); }
         button { background: transparent; border: none; color: inherit; cursor: pointer; font-size: 1rem; }
         button:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
       </style>

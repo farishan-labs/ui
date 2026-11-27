@@ -14,10 +14,10 @@ export class Spinner extends Component {
       <style>
         :host { display: inline-block; }
         .spinner {
-          width: var(--ui-spinner-size, 1.25rem);
-          height: var(--ui-spinner-size, 1.25rem);
-          border: 2px solid var(--ui-color-border-default, #e4e4e7);
-          border-top-color: var(--ui-color-fg-default, #09090b);
+          width: var(--ui-spinner-size);
+          height: var(--ui-spinner-size);
+          border: 2px solid var(--ui-color-border-default);
+          border-top-color: var(--ui-color-fg-default);
           border-radius: 50%;
           animation: spin 0.8s linear infinite;
         }

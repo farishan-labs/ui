@@ -11,7 +11,9 @@
 Part of Faris Han Labs. Buy the OpenCode Dev Toolkit on Gumroad.
 
 Headless UI primitives + W3C DTCG tokens for Faris Han Labs. Web components
-(first), a11y-first, framework-agnostic core. GPL-3.0.
+(first), a11y-first, framework-agnostic core. Components render unstyled by
+default; import `@farishan-labs/ui/tokens.css` (the default skin) for the
+minimally beautiful baseline. GPL-3.0.
 
 ![preview](demo/preview.png)
 

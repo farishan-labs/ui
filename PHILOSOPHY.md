@@ -25,10 +25,11 @@ glue + primitives + tokens that everything else is built on (P-001).
 
 ### P1 — Behavior is separate from presentation
 
-The single most durable principle in the field (E0001–E0005, E0060). Components
-ship behavior, accessibility, and state management only. They ship **no CSS
-opinions**. Visuals come from tokens + the consumer's styling engine. This is
-what lets a component outlive any visual trend.
+The single most durable principle in the field (E0001–E0005, E0060). Components ship behavior, accessibility, and state management only. They
+ship **no hardcoded visual opinions**: every visual value is a `var(--ui-*)`
+with no fallback, so a component renders unstyled ("headless") unless a token
+skin (e.g. the shipped `tokens.css`) is imported. `tokens.css` is the optional
+default skin. This is what lets a component outlive any visual trend.
 
 ### P2 — Accessibility is a primitive-layer requirement, not polish
 

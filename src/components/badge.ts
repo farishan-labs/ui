@@ -16,13 +16,13 @@ export class Badge extends Component {
         .badge {
           display: inline-flex;
           align-items: center;
-          gap: var(--ui-space-1, 0.25rem);
-          padding: var(--ui-space-1, 0.25rem) var(--ui-space-2, 0.5rem);
-          border-radius: var(--ui-radius-full, 9999px);
-          font-size: var(--ui-font-size-sm, 0.875rem);
+          gap: var(--ui-space-1);
+          padding: var(--ui-space-1) var(--ui-space-2);
+          border-radius: var(--ui-radius-full);
+          font-size: var(--ui-font-size-sm);
           line-height: 1;
-          background: var(--ui-color-bg-muted, #f4f4f5);
-          color: var(--ui-color-fg-default, #09090b);
+          background: var(--ui-color-bg-muted);
+          color: var(--ui-color-fg-default);
         }
         .badge[data-variant="success"] { background: #dcfce7; color: #166534; }
         .badge[data-variant="danger"] { background: #fee2e2; color: #991b1b; }
