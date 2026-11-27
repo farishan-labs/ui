@@ -13,6 +13,17 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   </head>
   <body>
+    <button
+      id="menuToggle"
+      class="menu-toggle"
+      type="button"
+      aria-label="Toggle navigation menu"
+      aria-expanded="false"
+      aria-controls="sidebar"
+    >
+      &#9776;
+    </button>
+    <div id="backdrop" class="backdrop" aria-hidden="true"></div>
     <aside id="sidebar">
       <h1>FHL UI</h1>
       <button id="themeToggle" type="button">Toggle theme</button>
