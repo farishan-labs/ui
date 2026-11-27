@@ -2,6 +2,33 @@ import "/dist/index.js";
 
 const content = document.getElementById("content");
 
+const body = document.body;
+const menuToggle = document.getElementById("menuToggle");
+const backdrop = document.getElementById("backdrop");
+const sidebar = document.getElementById("sidebar");
+
+function openDrawer() {
+  body.classList.add("drawer-open");
+  menuToggle?.setAttribute("aria-expanded", "true");
+}
+function closeDrawer() {
+  body.classList.remove("drawer-open");
+  menuToggle?.setAttribute("aria-expanded", "false");
+}
+function toggleDrawer() {
+  if (body.classList.contains("drawer-open")) closeDrawer();
+  else openDrawer();
+}
+
+menuToggle?.addEventListener("click", toggleDrawer);
+backdrop?.addEventListener("click", closeDrawer);
+sidebar?.querySelectorAll("nav a").forEach((a) =>
+  a.addEventListener("click", closeDrawer)
+);
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeDrawer();
+});
+
 const routes = {
   "/README": "/README.md",
   "/PHILOSOPHY": "/PHILOSOPHY.md",
@@ -47,6 +74,7 @@ const componentShowcase = `
 `;
 
 async function render() {
+  closeDrawer();
   const hash = location.hash || "#/README";
   const key = hash.replace(/^#/, "");
   if (key === "/demo") {
