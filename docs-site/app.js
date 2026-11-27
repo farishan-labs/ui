@@ -22,9 +22,7 @@ function toggleDrawer() {
 
 menuToggle?.addEventListener("click", toggleDrawer);
 backdrop?.addEventListener("click", closeDrawer);
-sidebar?.querySelectorAll("nav a").forEach((a) =>
-  a.addEventListener("click", closeDrawer)
-);
+sidebar?.querySelectorAll("nav a").forEach((a) => a.addEventListener("click", closeDrawer));
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeDrawer();
 });
@@ -71,6 +69,11 @@ const componentShowcase = `
 
   <h2>Toast</h2>
   <ui-toast message="Saved successfully" variant="success" open></ui-toast>
+
+  <h2>Playground</h2>
+  <label>Variant: <select id="pgVariant"><option>primary</option><option>secondary</option><option>danger</option></select></label>
+  <label><input type="checkbox" id="pgDisabled" /> disabled</label>
+  <div id="pgOut"><ui-button id="pgBtn" variant="primary" label="Playground"></ui-button></div>
 `;
 
 async function render() {
@@ -88,6 +91,14 @@ async function render() {
     if (window.Prism) window.Prism.highlightAllUnder(content);
     const btn = content.querySelector("#openDlg");
     btn?.addEventListener("click", () => content.querySelector("#dlg")?.setAttribute("open", ""));
+    const v = content.querySelector("#pgVariant");
+    const d = content.querySelector("#pgDisabled");
+    const b = content.querySelector("#pgBtn");
+    v?.addEventListener("change", () => b?.setAttribute("variant", v.value));
+    d?.addEventListener("change", () => {
+      if (d.checked) b?.setAttribute("disabled", "");
+      else b?.removeAttribute("disabled");
+    });
     return;
   }
   const path = routes[key] || "/README.md";
@@ -104,11 +115,64 @@ async function render() {
 function bindDemo() {}
 
 const themeToggle = document.getElementById("themeToggle");
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  try {
+    localStorage.setItem("fhl-theme", theme);
+  } catch {}
+}
+const stored = (() => {
+  try {
+    return localStorage.getItem("fhl-theme");
+  } catch {
+    return null;
+  }
+})();
+const initial =
+  stored || (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+applyTheme(initial);
 themeToggle?.addEventListener("click", () => {
-  const html = document.documentElement;
-  const dark = html.getAttribute("data-theme") !== "light";
-  html.setAttribute("data-theme", dark ? "light" : "dark");
+  const current = document.documentElement.getAttribute("data-theme");
+  applyTheme(current === "light" ? "dark" : "light");
 });
 
+function addCopyButtons() {
+  document.querySelectorAll("pre").forEach((pre) => {
+    if (pre.querySelector(".copy-btn")) return;
+    const btn = document.createElement("button");
+    btn.className = "copy-btn";
+    btn.textContent = "Copy";
+    btn.addEventListener("click", () => {
+      const code = pre.querySelector("code");
+      navigator.clipboard?.writeText(code ? code.textContent : pre.textContent);
+      btn.textContent = "Copied";
+      setTimeout(() => (btn.textContent = "Copy"), 1200);
+    });
+    pre.style.position = "relative";
+    pre.appendChild(btn);
+  });
+}
+function updateActiveLink() {
+  const key = (location.hash || "#/README").replace(/^#/, "");
+  addCopyButtons();
+  document.querySelectorAll("#sidebar nav a").forEach((a) => {
+    const href = (a.getAttribute("href") || "").replace(/^#/, "");
+    a.classList.toggle("active", href === key);
+  });
+}
+const origRender = render;
+render = async function () {
+  await origRender();
+  updateActiveLink();
+};
+
+const searchInput = document.getElementById("search");
+searchInput?.addEventListener("input", () => {
+  const q = (searchInput.value || "").toLowerCase();
+  document.querySelectorAll("#sidebar nav a").forEach((a) => {
+    const text = a.textContent.toLowerCase();
+    a.style.display = text.includes(q) ? "" : "none";
+  });
+});
 window.addEventListener("hashchange", render);
 render();
