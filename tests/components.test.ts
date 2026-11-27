@@ -187,13 +187,15 @@ test("ui-button escapes html in label", () => {
   expect(el.shadowRoot.innerHTML).not.toContain("<script>");
 });
 
-
 test("ui-accordion toggles panels via behavior", () => {
   const el = document.createElement("ui-accordion") as any;
-  el.setAttribute("items", JSON.stringify([
-    { value: "a", title: "A", content: "content a" },
-    { value: "b", title: "B", content: "content b" },
-  ]));
+  el.setAttribute(
+    "items",
+    JSON.stringify([
+      { value: "a", title: "A", content: "content a" },
+      { value: "b", title: "B", content: "content b" },
+    ]),
+  );
   document.body.appendChild(el);
   const btns = el.shadowRoot.querySelectorAll(".trigger");
   const panels = el.shadowRoot.querySelectorAll(".panel");
