@@ -9,3 +9,6 @@ coverage/
 
 # agent-time local tracking
 .agent-time/
+
+# docs build output
+docs-dist/

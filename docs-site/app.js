@@ -75,5 +75,12 @@ async function render() {
 
 function bindDemo() {}
 
+const themeToggle = document.getElementById("themeToggle");
+themeToggle?.addEventListener("click", () => {
+  const html = document.documentElement;
+  const dark = html.getAttribute("data-theme") !== "light";
+  html.setAttribute("data-theme", dark ? "light" : "dark");
+});
+
 window.addEventListener("hashchange", render);
 render();

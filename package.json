@@ -59,7 +59,9 @@
     "lint": "oxlint .",
     "fmt": "oxfmt .",
     "fmt:check": "oxfmt --check .",
-    "check": "bun run lint && bun run fmt:check && bun run typecheck"
+    "check": "bun run lint && bun run fmt:check && bun run typecheck",
+    "docs:build": "bun run build && rm -rf docs-dist && mkdir -p docs-dist && cp -r docs-site/. docs-dist/ && cp -r docs docs-dist/docs",
+    "docs:dev": "bun run dev"
   },
   "dependencies": {},
   "devDependencies": {
