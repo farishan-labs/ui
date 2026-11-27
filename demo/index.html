@@ -13,13 +13,13 @@
         padding: var(--ui-space-6, 1.5rem);
         display: grid;
         gap: var(--ui-space-4, 1rem);
-        max-width: 48rem;
         margin: 0 auto;
       }
     </style>
   </head>
   <body>
     <h1>@farishan-labs/ui</h1>
+    <p><button id="toggleSkin" type="button">Toggle default skin (tokens.css)</button></p>
     <ui-button variant="primary" label="Primary"></ui-button>
     <ui-button variant="secondary" label="Secondary"></ui-button>
     <ui-button variant="danger" label="Danger" disabled></ui-button>
@@ -32,6 +32,8 @@
 
     <ui-field label="Email" hint="We never share" placeholder="you@example.com"></ui-field>
     <ui-field label="Password" type="password" error="Too short"></ui-field>
+
+    <ui-accordion id="acc" items='[{"value":"a","title":"Section A","content":"Content for section A."},{"value":"b","title":"Section B","content":"Content for section B."}]'></ui-accordion>
 
     <ui-empty-state
       title="No items"
@@ -52,6 +54,10 @@
     <script type="module">
       document.getElementById("openDlg").addEventListener("click", () => {
         document.getElementById("dlg").setAttribute("open", "");
+      });
+      const skinLink = document.querySelector('link[href="/dist/tokens.css"]');
+      document.getElementById("toggleSkin").addEventListener("click", () => {
+        if (skinLink) skinLink.disabled = !skinLink.disabled;
       });
     </script>
   </body>
