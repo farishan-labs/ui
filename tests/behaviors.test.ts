@@ -2,6 +2,7 @@ import { test, expect } from "bun:test";
 import { Disclosure, reduceDisclosure, initialDisclosure } from "../src/behaviors/atoms/disclosure";
 import { RovingTabindex, rovingIndex } from "../src/behaviors/atoms/roving-tabindex";
 import { Accordion, createAccordion } from "../src/behaviors/generated/accordion";
+import { Tabs, createTabs } from "../src/behaviors/tabs";
 import { compileBml } from "../packages/bml/compile-bml";
 import { readFileSync } from "node:fs";
 
@@ -86,4 +87,20 @@ test("compiler output equality", () => {
   const after = readFileSync(generatedPath, "utf8");
   expect(code).toBe(before);
   expect(after).toBe(before);
+});
+
+test("tabs single active", () => {
+  const t = createTabs({ initialActive: "a" }, 3);
+  expect(t.isActive("a")).toBe(true);
+  t.select("b");
+  expect(t.isActive("b")).toBe(true);
+  expect(t.isActive("a")).toBe(false);
+});
+
+test("tabs focus movement", () => {
+  const t = new Tabs({}, 4);
+  t.setItemCount(4);
+  expect(t.moveFocus("ArrowDown")).toBe(1);
+  expect(t.focusIndex).toBe(1);
+  expect(t.moveFocus("End")).toBe(3);
 });

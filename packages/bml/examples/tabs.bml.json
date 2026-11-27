@@ -1,0 +1,14 @@
+{
+  "name": "tabs",
+  "atoms": ["roving"],
+  "state": { "active": { "type": "string", "default": "" } },
+  "props": {},
+  "transitions": [
+    {
+      "event": "select",
+      "param": "v",
+      "actions": [{ "set": "active", "value": "v" }]
+    }
+  ],
+  "a11y": "tabs"
+}
