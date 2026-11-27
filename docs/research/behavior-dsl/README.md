@@ -102,6 +102,33 @@ BML (JSON IR) → Behavior IR (atoms + transitions) → TS behavior module
 2. Measure token reduction vs. hand-written TS.
 3. Decide productization.
 
+## Sources
+
+Primary (official docs/specs):
+- A2UI (Google) — declarative agent-to-UI format: https://a2ui.org / google.github.io/A2UI
+- MCP Apps — https://blog.modelcontextprotocol.io (2025-11-21) + spec (ui:// resources, text-only fallback)
+- AG-UI protocol — https://docs.ag-ui.com
+- XState / statecharts — https://stately.ai/docs, David Harel (1987), SCXML (W3C)
+- Zag.js — https://zagjs.com (framework-agnostic state machines)
+- React Aria — https://react-spectrum.adobe.com (atomic hooks)
+- Base UI — https://base-ui.com (headless primitives)
+- BAML — https://docs.boundaryml.com (LLM function DSL)
+- TOON — https://github.com/toon-format/toon (token-oriented object notation)
+- Outlines / XGrammar / Guidance — constrained decoding for LLMs
+- W3C Design Tokens (DTCG) — https://www.w3.org/community/design-tokens (stable 2025-10-28)
+- WAI-ARIA 1.2/1.3 + WCAG — https://www.w3.org/TR/wai-aria-1.2
+
+Secondary:
+- Vercel AI SDK UI (json-render, streaming component trees) — https://ai-sdk.dev
+- CopilotKit — https://docs.copilotkit.ai (AG-UI, GenUI)
+- assistant-ui — https://github.com/assistant-ui/assistant-ui
+
+Internal:
+- `docs/research/README.md` (FHL UI research, E0001-E0080)
+- `PHILOSOPHY.md` (P1-P10)
+- `src/behaviors/` (atomic behaviors — to be scaffolded)
+- `src/adapters/ui-sdk.ts` (adapter pattern reference)
+
 ## Related
 - `docs/research/README.md` (FHL UI research)
 - `PHILOSOPHY.md` (P1-P10)
