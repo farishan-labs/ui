@@ -68,19 +68,61 @@ async function render() {
     const md = await res.text();
     content.innerHTML = marked.parse(md);
     if (window.Prism) window.Prism.highlightAllUnder(content);
-  } catch (e) {
+  } catch {
     content.textContent = "Failed to load " + path;
   }
 }
 
 function bindDemo() {}
 
+const THEME_KEY = "theme";
+
+function storedTheme() {
+  try {
+    const value = localStorage.getItem(THEME_KEY);
+    return value === "light" || value === "dark" ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+function systemTheme() {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function currentTheme() {
+  const value = document.documentElement.getAttribute("data-theme");
+  return value === "light" || value === "dark" ? value : systemTheme();
+}
+
+function updateToggleLabel() {
+  if (!themeToggle) return;
+  const dark = currentTheme() === "dark";
+  themeToggle.textContent = dark ? "Switch to light" : "Switch to dark";
+  themeToggle.setAttribute("aria-pressed", String(dark));
+}
+
 const themeToggle = document.getElementById("themeToggle");
 themeToggle?.addEventListener("click", () => {
-  const html = document.documentElement;
-  const dark = html.getAttribute("data-theme") !== "light";
-  html.setAttribute("data-theme", dark ? "light" : "dark");
+  const next = currentTheme() === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next);
+  try {
+    localStorage.setItem(THEME_KEY, next);
+  } catch {
+    /* ignore */
+  }
+  updateToggleLabel();
 });
+
+// Keep following the system preference until the user makes an explicit choice.
+const colorSchemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+colorSchemeQuery.addEventListener("change", (event) => {
+  if (storedTheme()) return;
+  document.documentElement.setAttribute("data-theme", event.matches ? "dark" : "light");
+  updateToggleLabel();
+});
+
+updateToggleLabel();
 
 window.addEventListener("hashchange", render);
 render();
