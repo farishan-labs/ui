@@ -32,13 +32,22 @@
     "./tokens": {
       "types": "./dist/tokens.d.ts",
       "import": "./dist/tokens.js"
+    },
+    "./adapters/ui-sdk": {
+      "types": "./dist/adapters/ui-sdk.d.ts",
+      "import": "./dist/adapters/ui-sdk.js"
+    },
+    "./adapters": {
+      "types": "./dist/adapters/index.d.ts",
+      "import": "./dist/adapters/index.js"
     }
   },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "bun run typecheck && bun run gen:tokens && bun build src/index.ts --outdir dist --target browser && bun run build:tokens",
+    "build": "bun run typecheck && bun run gen:tokens && bun build src/index.ts src/adapters/index.ts src/adapters/ui-sdk.ts --outdir dist --target browser --entry-naming [dir]/[name].js && bun run build:tokens",
+    "build:adapters": "bun build src/adapters/index.ts src/adapters/ui-sdk.ts --outdir dist --target browser --entry-naming [dir]/[name].js",
     "build:tokens": "cp src/tokens/tokens/tokens.css dist/tokens.css && cp src/baseline.css dist/baseline.css",
     "gen:tokens": "bun run scripts/gen-tokens.ts",
     "preview": "bun run scripts/preview.ts",

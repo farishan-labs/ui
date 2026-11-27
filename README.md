@@ -44,6 +44,19 @@ import { tokens } from "@farishan-labs/ui"; // re-exported from design-tokens
 <ui-button variant="primary">Save</ui-button>
 ```
 
+## Adapters (opt-in)
+
+FHL UI's core stays self-contained and offline-capable. Remote/external UI SDKs
+are integrated through opt-in adapters under `src/adapters/`, not the core:
+
+```ts
+import "@farishan-labs/ui/adapters/ui-sdk";
+```
+
+- `adapters/ui-sdk` — lazily loads the ui-sdk.dev component SDK and bridges FHL
+design tokens onto it. Rejects (and leaves core untouched) when the remote is
+unavailable, so consumers can fall back to FHL primitives / native elements.
+
 ## Development
 
 ```bash
