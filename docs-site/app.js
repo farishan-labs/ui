@@ -2,31 +2,6 @@ import "/dist/index.js";
 
 const content = document.getElementById("content");
 
-const body = document.body;
-const menuToggle = document.getElementById("menuToggle");
-const backdrop = document.getElementById("backdrop");
-const sidebar = document.getElementById("sidebar");
-
-function openDrawer() {
-  body.classList.add("drawer-open");
-  menuToggle?.setAttribute("aria-expanded", "true");
-}
-function closeDrawer() {
-  body.classList.remove("drawer-open");
-  menuToggle?.setAttribute("aria-expanded", "false");
-}
-function toggleDrawer() {
-  if (body.classList.contains("drawer-open")) closeDrawer();
-  else openDrawer();
-}
-
-menuToggle?.addEventListener("click", toggleDrawer);
-backdrop?.addEventListener("click", closeDrawer);
-sidebar?.querySelectorAll("nav a").forEach((a) => a.addEventListener("click", closeDrawer));
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") closeDrawer();
-});
-
 const routes = {
   "/README": "/README.md",
   "/PHILOSOPHY": "/PHILOSOPHY.md",
@@ -77,13 +52,13 @@ const componentShowcase = `
 `;
 
 async function render() {
-  closeDrawer();
   const hash = location.hash || "#/README";
   const key = hash.replace(/^#/, "");
   if (key === "/demo") {
     content.innerHTML =
       '<iframe src="/demo/index.html" style="width:100%;height:80vh;border:0"></iframe>';
     bindDemo();
+    updateActiveLink();
     return;
   }
   if (key === "/components") {
@@ -99,6 +74,8 @@ async function render() {
       if (d.checked) b?.setAttribute("disabled", "");
       else b?.removeAttribute("disabled");
     });
+    addCopyButtons();
+    updateActiveLink();
     return;
   }
   const path = routes[key] || "/README.md";
@@ -107,34 +84,14 @@ async function render() {
     const md = await res.text();
     content.innerHTML = marked.parse(md);
     if (window.Prism) window.Prism.highlightAllUnder(content);
-  } catch (e) {
+    addCopyButtons();
+  } catch {
     content.textContent = "Failed to load " + path;
   }
+  updateActiveLink();
 }
 
 function bindDemo() {}
-
-const themeToggle = document.getElementById("themeToggle");
-function applyTheme(theme) {
-  document.documentElement.setAttribute("data-theme", theme);
-  try {
-    localStorage.setItem("fhl-theme", theme);
-  } catch {}
-}
-const stored = (() => {
-  try {
-    return localStorage.getItem("fhl-theme");
-  } catch {
-    return null;
-  }
-})();
-const initial =
-  stored || (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
-applyTheme(initial);
-themeToggle?.addEventListener("click", () => {
-  const current = document.documentElement.getAttribute("data-theme");
-  applyTheme(current === "light" ? "dark" : "light");
-});
 
 function addCopyButtons() {
   document.querySelectorAll("pre").forEach((pre) => {
@@ -152,20 +109,66 @@ function addCopyButtons() {
     pre.appendChild(btn);
   });
 }
+
 function updateActiveLink() {
   const key = (location.hash || "#/README").replace(/^#/, "");
-  addCopyButtons();
   document.querySelectorAll("#sidebar nav a").forEach((a) => {
     const href = (a.getAttribute("href") || "").replace(/^#/, "");
     a.classList.toggle("active", href === key);
   });
 }
-const origRender = render;
-render = async function () {
-  await origRender();
-  updateActiveLink();
-};
 
+// Theme toggle (polished)
+const THEME_KEY = "theme";
+
+function storedTheme() {
+  try {
+    const value = localStorage.getItem(THEME_KEY);
+    return value === "light" || value === "dark" ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+function systemTheme() {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function currentTheme() {
+  const value = document.documentElement.getAttribute("data-theme");
+  return value === "light" || value === "dark" ? value : systemTheme();
+}
+
+function updateToggleLabel() {
+  const themeToggle = document.getElementById("themeToggle");
+  if (!themeToggle) return;
+  const dark = currentTheme() === "dark";
+  themeToggle.textContent = dark ? "Switch to light" : "Switch to dark";
+  themeToggle.setAttribute("aria-pressed", String(dark));
+}
+
+const themeToggle = document.getElementById("themeToggle");
+themeToggle?.addEventListener("click", () => {
+  const next = currentTheme() === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next);
+  try {
+    localStorage.setItem(THEME_KEY, next);
+  } catch {
+    /* ignore */
+  }
+  updateToggleLabel();
+});
+
+const colorSchemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+colorSchemeQuery.addEventListener("change", (event) => {
+  if (storedTheme()) return;
+  document.documentElement.setAttribute("data-theme", event.matches ? "dark" : "light");
+  updateToggleLabel();
+});
+
+updateToggleLabel();
+
+// Search
 const searchInput = document.getElementById("search");
 searchInput?.addEventListener("input", () => {
   const q = (searchInput.value || "").toLowerCase();
@@ -174,5 +177,35 @@ searchInput?.addEventListener("input", () => {
     a.style.display = text.includes(q) ? "" : "none";
   });
 });
+
+// Drawer (responsive) logic
+const menuToggle = document.getElementById("menuToggle");
+const backdrop = document.getElementById("backdrop");
+const sidebar = document.getElementById("sidebar");
+
+function openDrawer() {
+  sidebar?.classList.add("open");
+  backdrop?.classList.add("open");
+  menuToggle?.setAttribute("aria-expanded", "true");
+}
+function closeDrawer() {
+  sidebar?.classList.remove("open");
+  backdrop?.classList.remove("open");
+  menuToggle?.setAttribute("aria-expanded", "false");
+}
+menuToggle?.addEventListener("click", () => {
+  if (sidebar?.classList.contains("open")) closeDrawer();
+  else openDrawer();
+});
+backdrop?.addEventListener("click", closeDrawer);
+document.querySelectorAll("#sidebar nav a").forEach((a) => {
+  a.addEventListener("click", () => {
+    if (window.innerWidth < 768) closeDrawer();
+  });
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeDrawer();
+});
+
 window.addEventListener("hashchange", render);
 render();
