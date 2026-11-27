@@ -1,8 +1,7 @@
 import { test, expect } from "bun:test";
 import { Disclosure, reduceDisclosure, initialDisclosure } from "../src/behaviors/atoms/disclosure";
 import { RovingTabindex, rovingIndex } from "../src/behaviors/atoms/roving-tabindex";
-import { Accordion, createAccordion } from "../src/behaviors/accordion";
-import { Accordion as GeneratedAccordion } from "../src/behaviors/generated/accordion";
+import { Accordion, createAccordion } from "../src/behaviors/generated/accordion";
 import { compileBml } from "../scripts/compile-bml";
 import { readFileSync } from "node:fs";
 
@@ -87,16 +86,4 @@ test("compiler output equality", () => {
   const after = readFileSync(generatedPath, "utf8");
   expect(code).toBe(before);
   expect(after).toBe(before);
-});
-
-test("generated matches hand-written behavior", () => {
-  const h = new Accordion({ multiple: true, collapsible: true });
-  const g = new GeneratedAccordion({ multiple: true, collapsible: true });
-  for (const v of ["a", "b", "c"]) {
-    h.toggle(v);
-    g.toggle(v);
-  }
-  h.toggle("a");
-  g.toggle("a");
-  expect(g.open).toEqual(h.open);
 });

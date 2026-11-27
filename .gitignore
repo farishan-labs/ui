@@ -6,3 +6,6 @@ coverage/
 # secrets
 .env
 .env.*
+
+# agent-time local tracking
+.agent-time/

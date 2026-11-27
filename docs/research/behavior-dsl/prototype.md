@@ -3,7 +3,7 @@
 ## Deliverables
 
 - Atoms: `src/behaviors/atoms/disclosure.ts`, `src/behaviors/atoms/roving-tabindex.ts`
-- Composite: `src/behaviors/accordion.ts` + generated `src/behaviors/generated/accordion.ts`
+- Composite: `src/behaviors/generated/accordion.ts` (generated from `examples/bml/accordion.bml.json`)
 - Compiler: `scripts/compile-bml.ts`
 - Example IR: `examples/bml/accordion.bml.json`
 - Tests: `tests/behaviors.test.ts`
