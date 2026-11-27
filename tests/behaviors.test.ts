@@ -2,7 +2,7 @@ import { test, expect } from "bun:test";
 import { Disclosure, reduceDisclosure, initialDisclosure } from "../src/behaviors/atoms/disclosure";
 import { RovingTabindex, rovingIndex } from "../src/behaviors/atoms/roving-tabindex";
 import { Accordion, createAccordion } from "../src/behaviors/generated/accordion";
-import { compileBml } from "../scripts/compile-bml";
+import { compileBml } from "../packages/bml/compile-bml";
 import { readFileSync } from "node:fs";
 
 test("disclosure toggles", () => {
@@ -82,7 +82,7 @@ test("accordion initialOpen and focus", () => {
 test("compiler output equality", () => {
   const generatedPath = "src/behaviors/generated/accordion.ts";
   const before = readFileSync(generatedPath, "utf8");
-  const code = compileBml("examples/bml/accordion.bml.json", generatedPath);
+  const code = compileBml("packages/bml/examples/accordion.bml.json", generatedPath);
   const after = readFileSync(generatedPath, "utf8");
   expect(code).toBe(before);
   expect(after).toBe(before);

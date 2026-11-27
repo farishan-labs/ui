@@ -20,7 +20,7 @@ interface BmlIr {
   a11y?: string;
 }
 
-const ROOT = resolve(import.meta.dir, "..");
+const ROOT = resolve(import.meta.dir, "..", "..");
 const ATOMS_DIR = resolve(ROOT, "src/behaviors/atoms");
 
 const ATOM_IMPORTS: Record<string, { module: string; exportName: string }> = {
