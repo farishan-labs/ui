@@ -1,5 +1,7 @@
 # BML prototype report (accordion)
 
+> Scope: this prototype compiler supports the **accordion** behavior only. It is not a general-purpose BML compiler.
+
 ## Deliverables
 
 - Atoms: `src/behaviors/atoms/disclosure.ts`, `src/behaviors/atoms/roving-tabindex.ts`

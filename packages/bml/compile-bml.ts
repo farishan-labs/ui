@@ -137,6 +137,15 @@ export function compileBml(inputPath: string, outputPath: string): string {
   if (!ir.name || !ir.atoms || !ir.state) {
     throw new Error("Invalid BML IR: missing name/atoms/state");
   }
+  // This prototype compiler only supports the accordion behavior.
+  if (ir.name !== "accordion") {
+    throw new Error(
+      `Unsupported BML behavior: ${ir.name} (only "accordion" is supported by this prototype compiler)`,
+    );
+  }
+  if (!ir.atoms.includes("disclosure") || !ir.atoms.includes("roving")) {
+    throw new Error("Unsupported BML atoms: this prototype compiler requires disclosure + roving");
+  }
   const code = generate(ir, outputPath);
   mkdirSync(dirname(resolve(outputPath)), { recursive: true });
   writeFileSync(resolve(outputPath), code, "utf8");
