@@ -205,3 +205,10 @@ test("ui-accordion toggles panels via behavior", () => {
   const btn0 = el.shadowRoot.querySelector('[data-value="a"]');
   expect(btn0.getAttribute("aria-expanded")).toBe("true");
 });
+
+test("ui-accordion handles invalid items JSON", () => {
+  const el = document.createElement("ui-accordion") as any;
+  el.setAttribute("items", "{bad json");
+  document.body.appendChild(el);
+  expect(el.shadowRoot.querySelectorAll(".trigger").length).toBe(0);
+});

@@ -1,10 +1,22 @@
 import { test, expect } from "bun:test";
-import { Disclosure, reduceDisclosure, initialDisclosure } from "../src/behaviors/atoms/disclosure";
-import { RovingTabindex, rovingIndex } from "../src/behaviors/atoms/roving-tabindex";
+import {
+  Disclosure,
+  reduceDisclosure,
+  initialDisclosure,
+  createDisclosure,
+} from "../src/behaviors/atoms/disclosure";
+import {
+  RovingTabindex,
+  rovingIndex,
+  createRovingTabindex,
+} from "../src/behaviors/atoms/roving-tabindex";
 import { Accordion, createAccordion } from "../src/behaviors/generated/accordion";
 import { Tabs, createTabs } from "../src/behaviors/tabs";
-import { Tabs as GeneratedTabs } from "../src/behaviors/generated/tabs";
-import { compileBml } from "../packages/bml/compile-bml";
+import {
+  Tabs as GeneratedTabs,
+  createTabs as createGeneratedTabs,
+} from "../src/behaviors/generated/tabs";
+import { compileBml, main } from "../packages/bml/compile-bml";
 import { readFileSync } from "node:fs";
 
 test("disclosure toggles", () => {
@@ -16,6 +28,9 @@ test("disclosure toggles", () => {
   expect(d.open).toBe(false);
   const s = reduceDisclosure(initialDisclosure(false), "toggle");
   expect(s.open).toBe(true);
+  expect(reduceDisclosure(initialDisclosure(false), "open").open).toBe(true);
+  expect(reduceDisclosure(initialDisclosure(true), "close").open).toBe(false);
+  expect(createDisclosure(true).open).toBe(true);
 });
 
 test("roving keydown moves index", () => {
@@ -26,6 +41,11 @@ test("roving keydown moves index", () => {
   expect(r.handleKey("Home")).toBe(0);
   expect(rovingIndex(0, "ArrowUp", 4)).toBe(3);
   expect(rovingIndex(0, "ArrowDown", 1)).toBe(0);
+  expect(rovingIndex(0, "x", 4)).toBe(0);
+  const r2 = new RovingTabindex(4);
+  r2.index = 10;
+  expect(r2.index).toBe(3);
+  expect(createRovingTabindex(2).count).toBe(2);
 });
 
 test("accordion single mode", () => {
@@ -115,6 +135,18 @@ test("compiler output equality (tabs)", () => {
   expect(after).toBe(before);
 });
 
+test("compiler rejects unsupported behavior", () => {
+  expect(() =>
+    compileBml("packages/bml/examples/unsupported.bml.json", "src/behaviors/generated/x.ts"),
+  ).toThrow();
+  // invalid IR (missing state)
+  const fs = require("node:fs");
+  fs.writeFileSync("packages/bml/examples/invalid.bml.json", '{"name":"x","atoms":[]}', "utf8");
+  expect(() =>
+    compileBml("packages/bml/examples/invalid.bml.json", "src/behaviors/generated/x.ts"),
+  ).toThrow();
+});
+
 test("generated tabs matches hand-written behavior", () => {
   const h = new Tabs({ initialActive: "a" }, 3);
   const g = new GeneratedTabs({ initialActive: "a" }, 3);
@@ -123,4 +155,30 @@ test("generated tabs matches hand-written behavior", () => {
   g.select("b");
   expect(g.active).toEqual(h.active);
   expect(g.isActive("b")).toBe(h.isActive("b"));
+});
+
+test("generated tabs covers methods", () => {
+  const t = new GeneratedTabs({ initialActive: "a" }, 3);
+  expect(createTabs({ initialActive: "b" }, 2).active).toBe("b");
+  expect(t.focusIndex).toBe(0);
+  t.setItemCount(3);
+  expect(t.moveFocus("ArrowDown")).toBe(1);
+  expect(createGeneratedTabs({ initialActive: "c" }, 1).active).toBe("c");
+  t.select("b");
+  expect(t.isActive("b")).toBe(true);
+});
+
+test("compiler main() CLI path", () => {
+  const orig = process.argv;
+  process.argv = [
+    "bun",
+    "compile-bml.ts",
+    "packages/bml/examples/accordion.bml.json",
+    "src/behaviors/generated/_cli.ts",
+  ];
+  main();
+  process.argv = orig;
+  const fs = require("node:fs");
+  expect(fs.existsSync("src/behaviors/generated/_cli.ts")).toBe(true);
+  fs.unlinkSync("src/behaviors/generated/_cli.ts");
 });

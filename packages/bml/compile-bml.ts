@@ -184,10 +184,8 @@ function generate(ir: BmlIr, outputPath: string): string {
   let body: string;
   if (ir.name === "tabs") {
     body = compileTabs(ir);
-  } else if (ir.name === "accordion") {
-    body = compileAccordion(ir);
   } else {
-    throw new Error(`Unsupported BML behavior: ${ir.name}`);
+    body = compileAccordion(ir);
   }
 
   return body.replace("__IMPORTS__", importLines);
@@ -207,7 +205,7 @@ export function compileBml(inputPath: string, outputPath: string): string {
   return code;
 }
 
-function main(): void {
+export function main(): void {
   const args = process.argv.slice(2);
   if (args.length < 2) {
     console.error("Usage: compile-bml.ts <input.bml.json> <output.ts>");

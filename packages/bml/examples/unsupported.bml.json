@@ -1,0 +1,5 @@
+{
+  "name": "foo",
+  "atoms": ["roving"],
+  "state": { "x": { "type": "string", "default": "" } }
+}
