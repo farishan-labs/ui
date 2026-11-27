@@ -44,6 +44,21 @@ import { tokens } from "@farishan-labs/ui"; // re-exported from design-tokens
 <ui-button variant="primary">Save</ui-button>
 ```
 
+## Architecture / Layers
+
+FHL UI is organized into four layers (see `PHILOSOPHY.md` §1, §3):
+
+1. **Behavior** — state, keyboard nav, focus, ARIA, events. Ships in the component.
+   No CSS opinions. (`src/core/component.ts`, `src/components/*`)
+2. **Tokens** — W3C DTCG JSON → generated CSS/TS constants. Single source of visual
+   truth. (`src/tokens/*`)
+3. **Presentation** — consumer's styling engine + token CSS variables. Not shipped.
+4. **Adapters** — opt-in bridges to external engines (e.g. ui-sdk.dev) behind the
+   FHL token/a11y contract. (`src/adapters/*`)
+
+Accessibility (P2), agent-readable semantics (P3), and token-driven visuals (P4)
+are non-negotiable across all layers. See `PHILOSOPHY.md` for the full rationale.
+
 ## Adapters (opt-in)
 
 FHL UI's core stays self-contained and offline-capable. Remote/external UI SDKs
