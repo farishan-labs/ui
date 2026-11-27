@@ -1,0 +1,29 @@
+{
+  "name": "accordion",
+  "atoms": ["disclosure", "roving"],
+  "state": { "open": { "type": "string[]", "default": [] } },
+  "props": {
+    "multiple": { "type": "boolean", "default": false },
+    "collapsible": { "type": "boolean", "default": true }
+  },
+  "transitions": [
+    {
+      "event": "toggle",
+      "param": "v",
+      "guard": "!disabled(v)",
+      "actions": [
+        {
+          "if": "open.includes(v)",
+          "then": [
+            {
+              "if": "collapsible || open.length > 1",
+              "do": "open.remove(v)"
+            }
+          ]
+        },
+        { "else": { "set": "open", "value": "multiple ? [...open, v] : [v]" } }
+      ]
+    }
+  ],
+  "a11y": "accordion"
+}

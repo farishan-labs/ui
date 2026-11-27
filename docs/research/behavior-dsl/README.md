@@ -37,6 +37,7 @@ dialect ("BML" — Behavior Markup Language) with an optional compact shorthand 
 humans. Both compile to the same IR.
 
 ## Compact shorthand (accordion)
+
 ```
 behavior accordion {
   atoms: disclosure, roving
@@ -51,6 +52,7 @@ behavior accordion {
 ```
 
 ## JSON IR (what the LLM emits)
+
 ```json
 {
   "name": "accordion",
@@ -61,18 +63,25 @@ behavior accordion {
     "collapsible": { "type": "boolean", "default": true }
   },
   "transitions": [
-    { "event": "toggle", "param": "v", "guard": "!disabled(v)",
+    {
+      "event": "toggle",
+      "param": "v",
+      "guard": "!disabled(v)",
       "actions": [
-        { "if": "open.includes(v)",
-          "then": [{ "if": "collapsible || open.length > 1", "do": "open.remove(v)" }] },
+        {
+          "if": "open.includes(v)",
+          "then": [{ "if": "collapsible || open.length > 1", "do": "open.remove(v)" }]
+        },
         { "else": { "set": "open", "value": "multiple ? [...open, v] : [v]" } }
-      ] }
+      ]
+    }
   ],
   "a11y": "accordion"
 }
 ```
 
 ## Token-efficiency mechanisms
+
 1. Atom references expand to full a11y/keyboard logic at compile time.
 2. `a11y: <pattern>` auto-generates roles, states, keyboard map, focus mgmt.
 3. Named transitions reference atom verbs instead of inline implementations.
@@ -80,10 +89,12 @@ behavior accordion {
 5. Compact shorthand for humans; JSON IR for machines.
 
 ## Compilation pipeline
+
 BML (JSON IR) → Behavior IR (atoms + transitions) → TS behavior module
 → framework adapters (web component, React, …) → token-bound rendering.
 
 ## Relation to FHL principles
+
 - P1: behavior described independently of presentation (zero styling in BML).
 - P2/P3: a11y auto-derived from `a11y:` tag, so it can't be skipped in review.
 - P4: presentation stays in tokens; BML references token names only.
@@ -92,12 +103,14 @@ BML (JSON IR) → Behavior IR (atoms + transitions) → TS behavior module
 - P8: open format, self-hostable compiler, no vendor service.
 
 ## Open questions
+
 - Separate repo/product vs. live in `@farishan-labs/ui`?
 - Versioning the `a11y:` pattern library as ARIA evolves.
 - Can the shorthand be made unambiguous enough for LLMs to emit directly?
 - Declarative transitions vs. small code expressions (injection/complexity risk).
 
 ## Next steps
+
 1. Prototype compiler on accordion end-to-end.
 2. Measure token reduction vs. hand-written TS.
 3. Decide productization.
@@ -105,6 +118,7 @@ BML (JSON IR) → Behavior IR (atoms + transitions) → TS behavior module
 ## Sources
 
 Primary (official docs/specs):
+
 - A2UI (Google) — declarative agent-to-UI format: https://a2ui.org / google.github.io/A2UI
 - MCP Apps — https://blog.modelcontextprotocol.io (2025-11-21) + spec (ui:// resources, text-only fallback)
 - AG-UI protocol — https://docs.ag-ui.com
@@ -119,22 +133,27 @@ Primary (official docs/specs):
 - WAI-ARIA 1.2/1.3 + WCAG — https://www.w3.org/TR/wai-aria-1.2
 
 Secondary:
+
 - Vercel AI SDK UI (json-render, streaming component trees) — https://ai-sdk.dev
 - CopilotKit — https://docs.copilotkit.ai (AG-UI, GenUI)
 - assistant-ui — https://github.com/assistant-ui/assistant-ui
 
 Internal:
+
 - `docs/research/README.md` (FHL UI research, E0001-E0080)
 - `PHILOSOPHY.md` (P1-P10)
 - `src/behaviors/` (atomic behaviors — to be scaffolded)
 - `src/adapters/ui-sdk.ts` (adapter pattern reference)
 
 ## Related
+
 - `docs/research/README.md` (FHL UI research)
 - `PHILOSOPHY.md` (P1-P10)
 - `src/behaviors/` (atomic behaviors — to be scaffolded)
 - `src/adapters/ui-sdk.ts` (adapter pattern reference)
+
 ```
 
 I'll write this file.<|end|><|start|>startup to=write<|channel|>analysis <|constrain|>xml<|message|><rfl:parameter name="path">
 /home/faris/dev/labs/ui/docs/research/behavior-dsl/README.md
+```
