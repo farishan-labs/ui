@@ -60,7 +60,7 @@
     "fmt": "oxfmt .",
     "fmt:check": "oxfmt --check .",
     "check": "bun run lint && bun run fmt:check && bun run typecheck",
-    "docs:build": "bun run build && rm -rf docs-dist && mkdir -p docs-dist && cp docs-site/index.html docs-dist/index.html && mkdir -p docs-dist/docs-site && cp docs-site/app.js docs-site/style.css docs-dist/docs-site/ && mkdir -p docs-dist/dist && cp -r dist/. docs-dist/dist/ && cp README.md PHILOSOPHY.md LAYOUT.md BASELINE.md docs-dist/ && cp -r demo docs-dist/demo && cp -r docs docs-dist/docs",
+    "docs:build": "bun run build && rm -rf docs-dist && mkdir -p docs-dist && cp docs-site/index.html docs-dist/index.html && mkdir -p docs-dist/docs-site && cp docs-site/app.js docs-site/style.css docs-dist/docs-site/ && cp docs-site/favicon.ico docs-dist/favicon.ico && mkdir -p docs-dist/dist && cp -r dist/. docs-dist/dist/ && cp README.md PHILOSOPHY.md LAYOUT.md BASELINE.md docs-dist/ && cp -r demo docs-dist/demo && cp -r docs docs-dist/docs",
     "docs:dev": "bun run dev",
     "deploy": "wrangler deploy"
   },
