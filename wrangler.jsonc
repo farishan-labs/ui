@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "farishan-labs-ui",
+  "compatibility_date": "2026-11-09",
+  "observability": {
+    "enabled": true
+  },
+  "workers_dev": true,
+  "preview_urls": true,
+  "assets": {
+    "directory": "docs-dist"
+  },
+  "routes": [
+    {
+      "pattern": "ui.farishan.com",
+      "custom_domain": true
+    }
+  ]
+}
